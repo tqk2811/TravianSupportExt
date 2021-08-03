@@ -7,3 +7,11 @@ export class TsTimer{
     public isShowZero: boolean;
     public time: number;
 }
+
+
+
+export class TsHelper{
+    public static Init() : void{
+        "abc".replaceAll("","");
+    }
+}

@@ -17,6 +17,7 @@
             ],
             "js": [
                 "/js/jquery-3.6.0.min.js",
+                "/js/Prototypes.js",
                 "/js/Libs.js"
             ]
         }

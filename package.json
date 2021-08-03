@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/tqk2811/TravianSupportExt#readme",
   "dependencies": {
-    "@types/chrome": "0.0.149"
+    "@types/chrome": "0.0.149",
+    "jquery": "^3.6.0"
   }
 }
