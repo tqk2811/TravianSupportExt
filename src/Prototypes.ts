@@ -95,3 +95,10 @@ Number.prototype.GetTimeTextFromHour = function() : string{
     if(hour_ > 0) text_ = hour_.zeroPad(2) + ":" + text_;
     return text_;
 }
+
+
+
+
+interface Window{
+    Instance: CurrentInstance;
+}

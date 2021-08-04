@@ -23,4 +23,5 @@
 hs_err_pid*
 .vscode
 node_modules
-ext/js
+*.js
+!ext/js/jquery-3.6.0.min.js
