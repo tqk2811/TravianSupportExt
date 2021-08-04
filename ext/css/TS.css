@@ -1,0 +1,58 @@
+td.unit.none{
+	background: #9eff9e;
+}
+#sidebarBoxVillagelist li{
+	grid-template-rows: 16px 12px!important;
+	font-size: 11px!important;
+}
+
+#sidebarBoxVillagelist .shortcutsEnabled li{
+	display: block!important;
+}
+.iconAndNameWrapper{
+	padding: 0!important;
+}
+
+.Tjs_troop_train{
+	height:100%; 
+	width:100%; 
+	overflow: hidden; 
+	margin-top:3px;
+	grid-column-start: 1;
+	grid-column-end: 4;
+}
+.Tjs_troop_train .Tjs_troop_train_group{
+	float: left;
+	width:25%;
+}
+.Tjs_troop_train .Tjs_troop_train_name{
+	float: left; 
+	color:black;
+	padding-right: 5px;
+}
+.Tjs_troop_train .Tjs_troop_train_timer{
+	float: left; 
+}
+
+
+
+
+.mobileOptimized #stockBar:before{
+	content:unset!important;
+}
+
+.task_helper_p1{
+	height: 12px;
+}
+
+.tjs-menu{
+	float:right;
+	width:100%;
+	grid-column-start: 3;
+	grid-row-start: 2;
+}
+
+.tjs-menu :nth-child(999)
+{
+	height: 21px;
+}

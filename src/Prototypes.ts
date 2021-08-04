@@ -65,12 +65,16 @@ String.prototype.getParameterByName = function(name: string) : string{
 }
 
 interface Number{
+    GetTimeTextFromMiliSecondLeft(): string;
     GetTimeTextFromSecondLeft(): string;
     GetTimeTextFromHour(): string;
     zeroPad(length : number): string;
 }
 Number.prototype.zeroPad = function(length : number) : string{
     return String(this).padStart(length, '0');
+}
+Number.prototype.GetTimeTextFromMiliSecondLeft = function() : string{
+    return (this % 1000).GetTimeTextFromSecondLeft();
 }
 Number.prototype.GetTimeTextFromSecondLeft = function() : string{
     let sec_ = this % 60;
