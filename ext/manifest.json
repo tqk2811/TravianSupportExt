@@ -18,7 +18,7 @@
                 "/js/CurrentInstance.js",
                 "/js/HotKeys.js",
                 "/js/TsTimerElement.js",
-                "/js/Libs.js"
+                "/js/Global.js"
             ]
         },
         {

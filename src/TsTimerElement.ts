@@ -19,7 +19,7 @@ class TsTimerElement extends HTMLElement{
         this.AdvText = "%s";
     }
 
-    isLoaded: boolean;
+    private isLoaded: boolean;
     public State: TimerState;
     public Counting: TimerCounting;
     public NavigateUrl: string;
@@ -36,12 +36,12 @@ class TsTimerElement extends HTMLElement{
         if(this.NavigateUrl) this.onclick = function(){location.href = e.NavigateUrl};
     }
 
-    static intervalHandle: number;
+    private static intervalHandle: number;
     public static Start(): void{
         if(!TsTimerElement.intervalHandle) TsTimerElement.intervalHandle = window.setInterval(TsTimerElement.TimerInterval, 1000);
     }
 
-    static TimerInterval(): void{
+    private static TimerInterval(): void{
         $(".tsTimer").each(function(){
             let timerElement = $(this).get()[0] as TsTimerElement;
             if(timerElement.State == TimerState.Stopped) return;
