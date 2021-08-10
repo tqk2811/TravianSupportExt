@@ -11,6 +11,6 @@
       "suppressImplicitAnyIndexErrors": true ,
       "outDir": "ext/js",
     },
-    "include": [ "src/*" ],
+    "include": [ "src/*", "src/**/*" ],
     "exclude": [ "node_modules", "src/test" ] 
 }

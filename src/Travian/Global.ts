@@ -36,8 +36,8 @@ function InitSidebarBoxActiveVillage() : void{
 
 function InitSidebarBoxLinklist():void{
     $("#sidebarBoxLinklist").each(function(){
-        window.Instance.Account.LinkedList.forEach(element => {
+        // window.Instance.Account.LinkedList.forEach(element => {
             
-        });
+        // });
     });
 }

@@ -1,7 +1,13 @@
-$(function () {
+$(document).ready(function () {
     window.Instance = new CurrentInstance();
-    window.Instance.Village.Read();
-    window.Instance.Village.Save();
+    
+    let currentVillage = VillageData.Load(window.Instance.villageId);
+    currentVillage.Read();
+    currentVillage.Save();
+    
+
+    StatisticsReader();
+    StatisticsRender();
     //global
     //InitSidebarBoxActiveVillage();
     //InitSidebarBoxLinklist();

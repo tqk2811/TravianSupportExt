@@ -26,13 +26,6 @@ class CurrentInstance{
         this._e_ActiveTabSub = document.querySelector(".contentNavi div.container.active");
 
         this._Server = ServerData.Load();
-        if(!this._Server) this._Server = new ServerData();
-
-        if(this._UserName) this._Account = AccountData.Load(this._UserName);
-        if(!this._Account) this._Account = new AccountData(this._UserName);
-
-        if(this._villageId) this._Village = VillageData.Load(this._villageId);
-        if(!this._Village) this._Village = new VillageData(this._villageId);
 
         console.log("TravianSupport Ext: UserName:" + this._UserName 
             + ", isPlus:" + this._isPlus
@@ -57,10 +50,6 @@ class CurrentInstance{
     private _e_TabSubs: NodeListOf<Element>;
     private _e_ActiveTabSub: Element;
 
-
-
-    private _Account: AccountData;
-    private _Village: VillageData;
     private _Server: ServerData;
 
     
@@ -96,12 +85,6 @@ class CurrentInstance{
     }
     public get e_ActiveTabSub(): Element{
         return this._e_ActiveTabSub;
-    }
-    public get Account(): AccountData{
-        return this._Account;
-    }
-    public get Village(): VillageData{
-        return this._Village;
     }
     public get Server(): ServerData{
         return this._Server;
