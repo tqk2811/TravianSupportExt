@@ -88,6 +88,9 @@ interface IVillageData{
     Resources: Resources;
 
     LastUpdateAt: number;
+
+    AttackCount: number;
+    AttackFirstEndTime: number;
 }
 
 class VillageData implements IVillageData {
@@ -120,6 +123,12 @@ class VillageData implements IVillageData {
     
     public get LastUpdateAt(): number{ return this.villageData.LastUpdateAt; }
     //private set LastUpdateAt(val:number){ this.villageData.LastUpdateAt = val; }
+
+    public get AttackCount(): number{ return this.villageData.AttackCount; }
+    //private set AttackCount(val:number){ this.villageData.AttackCount = val; }
+
+    public get AttackFirstEndTime(): number{ return this.villageData.AttackFirstEndTime; }
+    //private set AttackFirstEndTime(val:number){ this.villageData.AttackFirstEndTime = val; }
 
     public Read(): void {
         this.villageData.Storage = Number($("#stockBar.warehouse.capacity.value").text().getASCII().replaceAll(".", "").replaceAll(",", ""));
@@ -170,6 +179,15 @@ class VillageData implements IVillageData {
                     let builds = new Array<number>();
                     $(".buildDuration .timer").each(function (i, e) { builds.push(Number($(this).attr("value"))); });
                     this.villageData.BuildsEndTime = builds;
+
+                    //count attack comming
+                    let attack_count = 0;
+                    let attack_time = 0;
+                    $("#movements tr").each(function (i, e) { 
+
+                    });
+                    this.villageData.AttackCount = attack_count;
+                    this.villageData.AttackFirstEndTime = attack_time;
                     break;
                 }
         }
@@ -195,7 +213,13 @@ class VillageData implements IVillageData {
             Storage: 0,
             Granary: 0,
             Resources: new Resources(0,0,0,0),
-            LastUpdateAt: 0
+            LastUpdateAt: 0,
+            AttackCount:0,
+            AttackFirstEndTime:0
         });
+    }
+
+    public static GetCurrent(): VillageData{
+        return VillageData.Load(window.Instance.villageId);
     }
 }

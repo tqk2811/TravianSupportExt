@@ -28,7 +28,7 @@ class TsTimerElement extends HTMLElement{
     public AdvText: string;
     //public IsFlag: boolean;
     //public IsShowZero: boolean;
-    public EndIime: number;
+    public EndIime: number;//milisec
 
     public Init(): void{
         let e = this;
@@ -36,6 +36,11 @@ class TsTimerElement extends HTMLElement{
         if(this.NavigateUrl) this.onclick = function(){location.href = e.NavigateUrl};
     }
 
+
+
+
+
+    
     private static intervalHandle: number;
     public static Start(): void{
         if(!TsTimerElement.intervalHandle) TsTimerElement.intervalHandle = window.setInterval(TsTimerElement.TimerInterval, 1000);

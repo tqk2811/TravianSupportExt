@@ -1,3 +1,11 @@
+interface TravianTooltip{
+    title:string;
+    text:string;
+}
+interface HTMLElement{
+    _travianTooltip: TravianTooltip;
+}
+
 interface Element{
     Remove(): void;
     MoveElementUp(times :number): void;

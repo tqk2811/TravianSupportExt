@@ -33,4 +33,8 @@ class AccountData implements IAccountData {
             LinkedList: []
         });
     }
+
+    public static GetCurrent(): AccountData{
+        return AccountData.Load(window.Instance.UserName);
+    }
 }

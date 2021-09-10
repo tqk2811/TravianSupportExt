@@ -3,13 +3,14 @@ class CurrentInstance{
         this._UserName = $(".playerName").text();
 
         this._e_build = document.getElementById("build");
-
-        this._e_Villages = document.querySelectorAll("#sidebarBoxVillagelist ul li");
-
-        this._e_ActiveVillage = document.querySelector("#sidebarBoxVillagelist ul li.active");
-
-        if(this._e_ActiveVillage){
-            this._villageId = parseInt(this._e_ActiveVillage.querySelector("a").href.getParameterByName("newdid"));
+        this._e_sidebarBoxVillagelist = document.getElementById("sidebarBoxVillagelist");
+        if(this._e_sidebarBoxVillagelist)
+        {
+            this._e_Villages = this._e_sidebarBoxVillagelist.querySelectorAll(".villageList div.listEntry");
+            this._e_ActiveVillage = this._e_sidebarBoxVillagelist.querySelector(".villageList div.listEntry.active");
+            if(this._e_ActiveVillage){
+                this._villageId = parseInt(this._e_ActiveVillage.querySelector("a").href.getParameterByName("newdid"));
+            }
         }
 
         if(this._e_build){
@@ -40,6 +41,7 @@ class CurrentInstance{
 
 
     private _e_build: Element;
+    private _e_sidebarBoxVillagelist: Element;
 
     private _e_Villages: NodeListOf<Element>;
     private _e_ActiveVillage: Element;
@@ -67,6 +69,9 @@ class CurrentInstance{
     }
     public get e_build(): Element{
         return this._e_build;
+    }
+    public get e_sidebarBoxVillagelist(): Element{
+        return this._e_sidebarBoxVillagelist;
     }
     public get e_Villages(): NodeListOf<Element>{
         return this._e_Villages;

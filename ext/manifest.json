@@ -7,26 +7,6 @@
     "manifest_version": 3,
     "content_scripts" : [
         {
-            "run_at" : "document_start",
-            "matches": [
-                "https://*.travian.com/*"
-            ],
-            "js": [
-                "/js/jquery-3.6.0.min.js",
-                "/js/DataManagers/VillageData.js",
-                "/js/DataManagers/AccountData.js",
-                "/js/DataManagers/ServerData.js",
-
-                "/js/Prototypes.js",
-                "/js/CurrentInstance.js",
-                "/js/HotKeys.js",
-                "/js/TsTimerElement.js",
-                
-                "/js/Travian/Statistics.js",
-                "/js/Travian/Global.js"
-            ]
-        },
-        {
             "run_at" : "document_idle",
             "matches": [
                 "https://*.travian.com/*"
@@ -35,13 +15,13 @@
                 "css/TS.css"
             ],
             "js": [
-                "/js/App.js"
+                "/js/Inject.js"
             ]
         }
     ],
     "web_accessible_resources":[
         {
-            "resources": [ "/res/*" ],
+            "resources": [ "/res/*", "/js/*" ],
             "matches": [ "https://*.travian.com/*" ]
         }
     ]
