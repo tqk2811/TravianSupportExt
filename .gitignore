@@ -24,4 +24,5 @@ hs_err_pid*
 .vscode
 node_modules
 *.js
+ext/_metadata
 !ext/js/Injects/jquery-3.6.0.min.js

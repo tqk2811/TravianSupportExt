@@ -131,8 +131,8 @@ class VillageData implements IVillageData {
     //private set AttackFirstEndTime(val:number){ this.villageData.AttackFirstEndTime = val; }
 
     public Read(): void {
-        this.villageData.Storage = Number($("#stockBar.warehouse.capacity.value").text().getASCII().replaceAll(".", "").replaceAll(",", ""));
-        this.villageData.Granary = Number($("#stockBar.granary.capacity.value").text().getASCII().replaceAll(".", "").replaceAll(",", ""));
+        this.villageData.Storage = Number($("#stockBar .warehouse .capacity .value").text().getASCII().replaceAll(".", "").replaceAll(",", ""));
+        this.villageData.Granary = Number($("#stockBar .granary .capacity .value").text().getASCII().replaceAll(".", "").replaceAll(",", ""));
         this.Resources = new Resources(
             Number($("#l1").text().trim().getASCII().replaceAll(".", "").replaceAll(",", "")),
             Number($("#l2").text().trim().getASCII().replaceAll(".", "").replaceAll(",", "")),
@@ -177,7 +177,7 @@ class VillageData implements IVillageData {
             case "/dorf2.php":
                 {
                     let builds = new Array<number>();
-                    $(".buildDuration .timer").each(function (i, e) { builds.push(Number($(this).attr("value"))); });
+                    $(".buildDuration .timer").each(function (i, e) { builds.push(Number($(this).attr("value")) * 1000 + Date.now()); });
                     this.villageData.BuildsEndTime = builds;
 
                     //count attack comming
@@ -195,9 +195,10 @@ class VillageData implements IVillageData {
 
     public Save(): void {
         this.villageData.LastUpdateAt = Date.now();
-        localStorage.setItem("TsVillage_" + this.VillageId, JSON.stringify(this));
+        localStorage.setItem("TsVillage_" + this.villageData.VillageId, JSON.stringify(this.villageData));
     }
     public static Load(villageId: number): VillageData {
+        if(!villageId ) throw new Error("villageId is null/undefined");
         let data = localStorage.getItem("TsVillage_" + villageId);
         if(data)
         {

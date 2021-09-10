@@ -20,9 +20,10 @@ class AccountData implements IAccountData {
 
 
     public Save(): void {
-        localStorage.setItem("TsAccount_" + this.UserName, JSON.stringify(this));
+        localStorage.setItem("TsAccount_" + this.accountData.UserName, JSON.stringify(this.accountData));
     }
     public static Load(userName: string): AccountData {
+        if(!userName || userName == '') throw new Error("userName is null/undefined");
         let data = localStorage.getItem("TsAccount_" + userName);
         if(data){
             let accountData = JSON.parse(data) as IAccountData;
@@ -30,7 +31,9 @@ class AccountData implements IAccountData {
         }
         else return new AccountData({
             UserName: userName,
-            LinkedList: []
+            LinkedList: [
+                { Name: "Green Attack Report", Url: "/report/offensive?opt=AAABAA==" }
+            ]
         });
     }
 

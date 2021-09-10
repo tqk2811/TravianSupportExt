@@ -56,3 +56,9 @@ td.unit.none{
 {
 	height: 21px;
 }
+
+#sidebarBoxVillagelist .expansionSlotInfo .boxTitle
+{
+	font-size: small; 
+	width: 75%;
+}

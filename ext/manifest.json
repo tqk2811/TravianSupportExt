@@ -1,10 +1,21 @@
 {
+    "manifest_version": 3,
     "name": "Travian Support",
     "description": "Travian Support",
     "version": "0.0.1",
-    "permissions": [ 
+    "declarative_net_request": {
+        "rule_resources": [{
+          "id": "ruleset_1",
+          "enabled": true,
+          "path": "blockRule.json"
+        }]
+    },
+    "permissions": [        
+        "declarativeNetRequest"
     ],
-    "manifest_version": 3,
+    "background": {
+        "service_worker": "/js/BackGround.js"
+    },
     "content_scripts" : [
         {
             "run_at" : "document_idle",

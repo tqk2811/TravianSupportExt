@@ -11,7 +11,9 @@ let scripts = [
     'js/Injects/Prototypes.js',
     'js/Injects/CurrentInstance.js',
     'js/Injects/HotKeys.js',
-    'js/Injects/TsTimerElement.js',
+
+    'js/Injects/Elements/SaveCheckBoxElement.js',
+    'js/Injects/Elements/TsTimerElement.js',
 
     'js/Injects/Travian/Statistics.js',
     'js/Injects/Travian/Global.js',

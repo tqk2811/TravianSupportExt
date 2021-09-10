@@ -66,3 +66,4 @@ class TsTimerElement extends HTMLElement{
         });
     }
 }
+customElements.define('ts-timer', TsTimerElement);
