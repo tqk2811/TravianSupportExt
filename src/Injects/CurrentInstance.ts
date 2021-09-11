@@ -9,7 +9,7 @@ class CurrentInstance{
             this._e_Villages = this._e_sidebarBoxVillagelist.querySelectorAll(".villageList div.listEntry");
             this._e_ActiveVillage = this._e_sidebarBoxVillagelist.querySelector(".villageList div.listEntry.active");
             if(this._e_ActiveVillage){
-                this._villageId = parseInt(this._e_ActiveVillage.querySelector("a").href.getParameterByName("newdid"));
+                this._villageId = parseInt(this._e_ActiveVillage.getAttribute("data-did"));
             }
         }
 

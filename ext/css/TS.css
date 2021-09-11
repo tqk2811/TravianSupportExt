@@ -41,8 +41,9 @@ td.unit.none{
 	content:unset!important;
 }
 
-.task_helper_p1{
+ts-village-adv{
 	height: 12px;
+	z-index: 999;
 }
 
 .tjs-menu{
@@ -61,4 +62,24 @@ td.unit.none{
 {
 	font-size: small; 
 	width: 75%;
+}
+.buttonFramed.withIcon img{
+	width: 20px;
+	height: 20px;
+	z-index: 3;
+	position: absolute; 
+	top: 50%; 
+	left: 50%; 
+	overflow: visible; 
+	transform: translateX(-50%) translateY(-50%);
+}
+.buttonFramed.withIcon.forum img{
+	margin-top: 1px;
+	margin-left: 2px;
+}
+.expansionSlotInfo .tsTimer{
+	float: right;
+	padding-right: 8px;
+	width:25%;
+	text-align: right;
 }

@@ -47,8 +47,8 @@ class TsTimerElement extends HTMLElement{
     }
 
     private static TimerInterval(): void{
-        $(".tsTimer").each(function(){
-            let timerElement = $(this).get()[0] as TsTimerElement;
+        $("ts-timer.tsTimer").each(function(){
+            let timerElement = this as TsTimerElement;
             if(timerElement.State == TimerState.Stopped) return;
             let current = Date.now();
             if((timerElement.Counting == TimerCounting.Up && current >= timerElement.EndIime) ||

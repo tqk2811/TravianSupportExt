@@ -52,10 +52,13 @@ enum Building {
 type TrainType =    Building.Barracks | Building.GreatBarracks | Building.Stable |
                     Building.GreatStable | Building.Smithy | Building.Workshop | Building.Hospital;
 
+type TroopBuilding = Building.Barracks | Building.Stable | Building.Workshop | 
+                    Building.GreatBarracks | Building.GreatStable;
 
 type NumArray4 = [number, number, number, number];
 
-type TroopTrains =  { [key in TrainType]: TroopTrain };
+//can't use enum in Mapped types, that key number is TrainType
+type TypeTroopTrains = { [key : number]: TroopTrain };
 
 class TroopTrain {
     public IsEnable: boolean;
@@ -80,8 +83,8 @@ interface IVillageData{
 
     BuildsEndTime: number[];
     DemolishEndTime: number;
-    TroopTrains: TroopTrains;
-    Celebration: number;
+    TroopTrains: TypeTroopTrains;
+    CelebrationEndTime: number;
 
     Storage: number;
     Granary: number;
@@ -106,11 +109,11 @@ class VillageData implements IVillageData {
     public get DemolishEndTime(): number{ return this.villageData.DemolishEndTime; }
     //private set DemolishEndTime(val:number){ this.villageData.DemolishEndTime = val; }
 
-    public get TroopTrains(): TroopTrains { return this.villageData.TroopTrains; }
+    public get TroopTrains(): TypeTroopTrains { return this.villageData.TroopTrains; }
     //private set TroopTrains(val: TroopTrains){ this.villageData.TroopTrains = val; }
 
-    public get Celebration(): number{ return this.villageData.Celebration; }
-    public set Celebration(val:number){ this.villageData.Celebration = val; }//update from load /village/statistics
+    public get CelebrationEndTime(): number{ return this.villageData.CelebrationEndTime; }
+    public set CelebrationEndTime(val:number){ this.villageData.CelebrationEndTime = val; }//update from load /village/statistics
 
     public get Storage(): number{ return this.villageData.Storage; }
     //private set Storage(val:number){ this.villageData.Storage = val; }
@@ -153,11 +156,22 @@ class VillageData implements IVillageData {
             case Building.Smithy:
             case Building.Workshop:
             case Building.Hospital:
+            case Building.TownHall:
                 {
-                    let val = $(".under_progress td.dur span").last().attr("value");
+                    let val = $(".under_progress td.dur span.timer").last().attr("value");
                     if (val && val != '') {
-                        if (!this.TroopTrains[window.Instance.Gid]) this.TroopTrains[window.Instance.Gid] = new TroopTrain();
-                        this.TroopTrains[window.Instance.Gid].EndTime = Date.now() + (Number(val) * 1000);
+                        switch(window.Instance.Gid)
+                        {
+                            case Building.TownHall:
+                                this.CelebrationEndTime = Date.now() + (Number(val) * 1000);
+                                break;
+
+                            default:
+                                if (!this.TroopTrains[window.Instance.Gid]) 
+                                    this.TroopTrains[window.Instance.Gid] = new TroopTrain();
+                                this.TroopTrains[window.Instance.Gid].EndTime = Date.now() + (Number(val) * 1000);
+                                break;
+                        }
                     }
                     break;
                 }
@@ -209,8 +223,8 @@ class VillageData implements IVillageData {
             VillageId : villageId,
             BuildsEndTime: [],
             DemolishEndTime: 0,
-            TroopTrains: {} as { [key in TrainType]: TroopTrain },
-            Celebration: 0,
+            TroopTrains: {},// as { [key in TrainType]: TroopTrain },
+            CelebrationEndTime: 0,
             Storage: 0,
             Granary: 0,
             Resources: new Resources(0,0,0,0),

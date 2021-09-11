@@ -39,7 +39,7 @@ class Statistics {
                                 let time = Number(row.find("span.timer").attr("value"));
 
                                 let village = VillageData.Load(id);
-                                village.Celebration = Date.now() + (time * 1000);
+                                village.CelebrationEndTime = Date.now() + (time * 1000);
                                 village.Save();
                             });
                         }

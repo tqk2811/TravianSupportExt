@@ -1,4 +1,5 @@
 $(function () {
+    if(!window.Travian) return;
     window.Instance = new CurrentInstance();
     
     let currentVillage = VillageData.Load(window.Instance.villageId);
