@@ -196,12 +196,20 @@ class VillageData implements IVillageData {
 
                     //count attack comming
                     let attack_count = 0;
-                    let attack_time = 0;
-                    $("#movements tr").each(function (i, e) { 
-
+                    let attack_endTime = 0;
+                    $("#movements tr").each(function (i, e) {
+                        let a1 = $(this).find(".mov .a1");
+                        let timer = $(this).find(".dur_r .timer");
+                        let count = Number(a1.text().match(/\d+/g));
+                        let timeLeft = Number(timer.attr("value"));
+                        if(!Number.isNaN(timeLeft) && !Number.isNaN(count))
+                        {
+                            attack_count = count;
+                            attack_endTime = timeLeft * 1000 + Date.now();
+                        }
                     });
                     this.villageData.AttackCount = attack_count;
-                    this.villageData.AttackFirstEndTime = attack_time;
+                    this.villageData.AttackFirstEndTime = attack_endTime;
                     break;
                 }
         }
@@ -217,13 +225,18 @@ class VillageData implements IVillageData {
         if(data)
         {
             let villageData = JSON.parse(data) as IVillageData;
+            //check
+            if(!villageData.VillageId) villageData.VillageId = villageId;
+            if(!villageData.BuildsEndTime) villageData.BuildsEndTime = [];
+            if(!villageData.TroopTrains) villageData.TroopTrains = {};
+            if(!villageData.Resources) villageData.Resources = new Resources(0,0,0,0);
             return new VillageData(villageData);
         }
         else return new VillageData({
             VillageId : villageId,
             BuildsEndTime: [],
             DemolishEndTime: 0,
-            TroopTrains: {},// as { [key in TrainType]: TroopTrain },
+            TroopTrains: {},
             CelebrationEndTime: 0,
             Storage: 0,
             Granary: 0,

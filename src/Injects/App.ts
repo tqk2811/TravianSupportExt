@@ -15,9 +15,10 @@ $(function () {
     Dorf.Render();
 
     //global
-    Global.InitSidebarBoxActiveVillage();
-    Global.InitSidebarBoxLinklist();
-    Global.InitSidebarBoxVillagelist();
+    Global.Init_SidebarBox_ActiveVillage();
+    Global.Init_SidebarBox_Linklist();
+    Global.Init_SidebarBox_Villagelist();
+    Global.Init_ResourceWrapper();
     
     TsTimerElement.Start();
 });

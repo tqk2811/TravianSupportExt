@@ -1,5 +1,5 @@
 class Global{
-    public static InitSidebarBoxActiveVillage() : void{
+    public static Init_SidebarBox_ActiveVillage() : void{
         if(!window.Instance.isPlus){
             let workshop = $("a.layoutButton.workshop.gold");
             if(!workshop.hasClass("disable")){
@@ -33,9 +33,30 @@ class Global{
                 market.on("click", function(){ window.location.href = "/build.php?gid=" + Building.Marketplace });
             }
         }
+
+        $("#sidebarBoxActiveVillage .content").each(function(){
+            let select = document.createElement("select");
+            for(let key in VillageAdvanced){
+                if (isNaN(Number(key))) {
+                    let option = document.createElement("option");
+                    option.value = VillageAdvanced[key];
+                    option.innerText = key;
+                    select.appendChild(option);
+                }
+            }
+            select.value = AccountData.GetCurrent().VillageAdvanced.toString();
+            select.onchange = function(){
+                let account = AccountData.GetCurrent();
+                account.VillageAdvanced = Number(select.value);
+                account.Save();
+                $("ts-village-adv").each(function(){ this.remove();});
+                Global.Villagelist_RenderVillageRowAdv(account);
+            }
+            $(this).append(select);
+        });
     }
 
-    public static InitSidebarBoxLinklist():void{
+    public static Init_SidebarBox_Linklist():void{
         $("#sidebarBoxLinklist .header .buttonsWrapper").each(function(){
             let a = document.createElement("a");
             a.className = "layoutButton buttonFramed withIcon round forum green";
@@ -79,33 +100,41 @@ class Global{
         });
     }
 
-    public static InitSidebarBoxVillagelist() : void {
-        Global.SidebarBox_RenderCulture();
-        
-        let account = AccountData.GetCurrent();
-        $("#sidebarBoxVillagelist .villageList .listEntry").each(function(){
-            let village = VillageData.Load(parseInt(this.getAttribute("data-did")));
-            switch(account.VillageAdvanced)
-            {
-                case VillageAdvanced.Build:
-                    Global.SidebarBoxShow_Build(this, village);
-                    break;
-                case VillageAdvanced.TroopTrains:
-                    Global.SidebarBoxShow_TroopTrain(this, village);
-                    break;
-                case VillageAdvanced.Celebration:
-                    Global.SidebarBoxShow_Celebration(this, village);
-                    break;
-                case VillageAdvanced.Resource:
-                    Global.SidebarBoxShow_Resource(this, village);
-                    break;
-                case VillageAdvanced.AttackRed:
-                    Global.SidebarBoxShow_AttackRed(this, village);
-                    break;
-            }
-        });
+//----------------------Villagelist------------------------------------------
+
+    public static Init_SidebarBox_Villagelist() : void {
+        Global.Villagelist_RenderCulture();
+        Global.Villagelist_RenderVillageRowAdv(AccountData.GetCurrent());
     }
-    private static SidebarBox_RenderCulture (): void{
+
+    private static Villagelist_RenderVillageRowAdv(account : AccountData) : void{
+        if(account.VillageAdvanced != VillageAdvanced.None)
+        {
+            $("#sidebarBoxVillagelist .villageList .listEntry").each(function(){
+                let village = VillageData.Load(parseInt(this.getAttribute("data-did")));
+                switch(account.VillageAdvanced)
+                {
+                    case VillageAdvanced.Build:
+                        Global.Villagelist_Show_Build(this, village);
+                        break;
+                    case VillageAdvanced.TroopTrains:
+                        Global.Villagelist_Show_TroopTrain(this, village);
+                        break;
+                    case VillageAdvanced.Celebration:
+                        Global.Villagelist_Show_Celebration(this, village);
+                        break;
+                    case VillageAdvanced.Resource:
+                        Global.Villagelist_Show_Resource(this, village);
+                        break;
+                    case VillageAdvanced.AttackRed:
+                        Global.Villagelist_Show_AttackRed(this, village);
+                        break;
+                }
+            });
+        }
+    }
+
+    private static Villagelist_RenderCulture (): void{
         let slots = $(".expansionSlotInfo .boxTitle .slots").text().getASCII().match(/\d+\/\d+$/);
         let tooltip_text = $(".expansionSlotInfo").get()[0]._travianTooltip.text.getASCII().match(/\d+\/\d+$/);
         $(".expansionSlotInfo .boxTitle").html(slots + " (" + tooltip_text + ")");
@@ -113,15 +142,16 @@ class Global{
         if(village.CelebrationEndTime && village.CelebrationEndTime > 0)
         {
             let timer = new TsTimerElement();
-            timer.NavigateUrl = "/build.php?gid=24";
+            timer.NavigateUrl = `/build.php?gid=${Building.TownHall}`;
             timer.IsSound = false;
             timer.EndIime = village.CelebrationEndTime;
             timer.Init();
             $(".expansionSlotInfo .boxTitle").get()[0].insertAdjacentElement("beforebegin", timer);
         }
     }
+
     private static _build_Color: string[] = ["Blue","BlueGray","Gray"];
-    private static SidebarBoxShow_Build(row: HTMLElement, village: VillageData): void{
+    private static Villagelist_Show_Build(row: HTMLElement, village: VillageData): void{
         let elements: HTMLElement[] = [];
         village.BuildsEndTime.forEach((val: number, index: number) => {
             let timer = new TsTimerElement();
@@ -131,9 +161,17 @@ class Global{
             timer.Init();
             elements.push(timer);
         });
+        if(village.DemolishEndTime && village.DemolishEndTime > Date.now()){
+            let timer = new TsTimerElement();
+            timer.IsSound = true;
+            timer.EndIime = village.DemolishEndTime;
+            timer.Color = "Red";
+            timer.NavigateUrl = `/build.php?newdid=${village.VillageId}&gid=${Building.MainBuilding}`;
+            timer.Init();
+            elements.push(timer);
+        }
         row.appendChild(new VillageRowAdv(elements));
     }
-
 
     private static _TroopTrain_Data: {[key in TroopBuilding]: { color:string, name:string }} = 
     {
@@ -143,7 +181,7 @@ class Global{
         [Building.GreatStable]: { color: "#C574F3", name: "S" },
         [Building.Workshop]: { color: "#C84545", name: "w" },
     };
-    private static SidebarBoxShow_TroopTrain(row: HTMLElement, village: VillageData): void{
+    private static Villagelist_Show_TroopTrain(row: HTMLElement, village: VillageData): void{
         let elements: HTMLElement[] = [];
         for(let key in village.TroopTrains){
             let val = village.TroopTrains[key];
@@ -160,12 +198,13 @@ class Global{
         }   
         row.appendChild(new VillageRowAdv(elements));
     }
-    private static SidebarBoxShow_Celebration(row: HTMLElement, village: VillageData): void{
+
+    private static Villagelist_Show_Celebration(row: HTMLElement, village: VillageData): void{
         let elements: HTMLElement[] = [];
         if(village.CelebrationEndTime && village.CelebrationEndTime > 0)
         {
             let timer = new TsTimerElement();
-            timer.NavigateUrl = "/build.php?gid=24";
+            timer.NavigateUrl = `/build.php?newdid=${village.VillageId}&gid=${Building.TownHall}`;
             timer.IsSound = false;
             timer.EndIime = village.CelebrationEndTime;
             timer.Init();
@@ -173,16 +212,55 @@ class Global{
         }
         row.appendChild(new VillageRowAdv(elements));
     }
-    private static SidebarBoxShow_Resource(row: HTMLElement, village: VillageData): void{ 
+
+    private static Villagelist_Show_Resource(row: HTMLElement, village: VillageData): void{ 
         let elements: HTMLElement[] = [];
         
         
         row.appendChild(new VillageRowAdv(elements));
     }
-    private static SidebarBoxShow_AttackRed(row: HTMLElement, village: VillageData): void{
+
+    private static Villagelist_Show_AttackRed(row: HTMLElement, village: VillageData): void{
         let elements: HTMLElement[] = [];
-        
-        
+        if(village.AttackCount > 0)
+        {
+            let timer = new TsTimerElement();
+            timer.NavigateUrl = `/build.php?newdid=${village.VillageId}&gid=${Building.RallyPoint}&tt=1&filter=1&subfilters=1`;
+            timer.Color = "Red";
+            timer.AdvText = `${village.AttackCount} in %s`;
+            timer.IsSound = false;
+            timer.EndIime = village.AttackFirstEndTime;
+            timer.Init();
+            elements.push(timer);
+        }
         row.appendChild(new VillageRowAdv(elements));
     }
+
+//----------------------Villagelist------------------------------------------
+
+
+public static Init_ResourceWrapper() : void{
+    $(".resourceWrapper").each(function(){
+        let vals = $(this).find(".resource span");
+        let total: number = 0;
+        total += Number(vals[0].innerText);
+        total += Number(vals[1].innerText);
+        total += Number(vals[2].innerText);
+        total += Number(vals[3].innerText);
+
+        $(this).append(`<div class="inlineIcon resource"><span class="value value">∑ = ${total}</span></div>`);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
 }

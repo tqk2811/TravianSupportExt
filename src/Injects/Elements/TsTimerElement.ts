@@ -40,10 +40,18 @@ class TsTimerElement extends HTMLElement{
 
 
 
-    
+    private static audio: HTMLAudioElement;
     private static intervalHandle: number;
     public static Start(): void{
-        if(!TsTimerElement.intervalHandle) TsTimerElement.intervalHandle = window.setInterval(TsTimerElement.TimerInterval, 1000);
+        if(!TsTimerElement.intervalHandle) 
+        {
+            TsTimerElement.audio = document.createElement("audio");
+            TsTimerElement.audio.src = window.TsResources.ding_sound;
+            TsTimerElement.audio.loop = false;
+            document.body.appendChild(TsTimerElement.audio);
+
+            TsTimerElement.intervalHandle = window.setInterval(TsTimerElement.TimerInterval, 1000);
+        }
     }
 
     private static TimerInterval(): void{
@@ -54,7 +62,7 @@ class TsTimerElement extends HTMLElement{
             if((timerElement.Counting == TimerCounting.Up && current >= timerElement.EndIime) ||
                 (timerElement.Counting == TimerCounting.Down && current <= timerElement.EndIime)){
                 let diff = Math.abs(current - timerElement.EndIime);
-                //if(timerElement.IsSound && diff <= 1000) ;//play sound                
+                if(timerElement.IsSound && diff <= 1000) TsTimerElement.audio.play();
                 timerElement.innerText =  timerElement.AdvText.format(diff.GetTimeTextFromMiliSecondLeft());
                 timerElement.isLoaded = true;
             }

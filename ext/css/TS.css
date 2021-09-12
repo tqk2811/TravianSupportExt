@@ -42,8 +42,14 @@ td.unit.none{
 }
 
 ts-village-adv{
-	height: 12px;
+	height: 10px;
 	z-index: 999;
+}
+
+ts-village-adv ts-timer{
+	padding-right: 3px;
+	line-height: 8px;
+    font-size: 12px;
 }
 
 .tjs-menu{
@@ -82,4 +88,7 @@ ts-village-adv{
 	padding-right: 8px;
 	width:25%;
 	text-align: right;
+}
+.resourceWrapper{
+	grid-template-columns: auto auto auto auto auto auto !important;
 }
