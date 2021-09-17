@@ -23,6 +23,8 @@ let scripts = [
     'js/Injects/Travian/Statistics.js',
     'js/Injects/Travian/Global.js',
     'js/Injects/Travian/Dorf.js',
+    'js/Injects/Travian/Build.js',
+    'js/Injects/Travian/Alliance.js',
 
     'js/Injects/App.js',
 ];

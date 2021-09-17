@@ -45,14 +45,22 @@ class Global{
                 }
             }
             select.value = AccountData.GetCurrent().VillageAdvanced.toString();
-            select.onchange = function(){
+            let select_onchange = function(){
                 let account = AccountData.GetCurrent();
                 account.VillageAdvanced = Number(select.value);
                 account.Save();
-                $("ts-village-adv").each(function(){ this.remove();});
+                $("ts-village-row-adv").each(function(){ this.remove();});
                 Global.Villagelist_RenderVillageRowAdv(account);
             }
+            select.onchange = select_onchange;
             $(this).append(select);
+            HotKeys.Push(81,function(){
+                let val_str =  VillageAdvanced[Number(select.value) + 1];
+                let val = VillageAdvanced.None;
+                if(val_str) val = Number(select.value) + 1;
+                select.value = val.toString();
+                select_onchange();
+            });
         });
     }
 
@@ -89,14 +97,20 @@ class Global{
                 });
             }
             
-            let checkbox_linkerlisttop = new SaveCheckBoxElement("sidebarBoxLinklist_bringToTop", function(state:boolean){
+            let cb_data : boolean = account.CheckboxData["sidebarBoxLinklist_bringToTop"];
+            if(cb_data == null) cb_data = false;
+            if(cb_data) $("#sidebarBoxLinklist").get()[0]?.MoveElementUp(5);//move to top
+	            else $("#sidebarBoxLinklist").get()[0]?.MoveElementDown(5);// back to bot
+
+            let checkbox_linkerlisttop = new SaveCheckBoxElement(cb_data, "Bring to top", function(state:boolean){
+                let account = AccountData.GetCurrent();
+                account.CheckboxData["sidebarBoxLinklist_bringToTop"] = state;
+                account.Save();
+
                 if(state) $("#sidebarBoxLinklist").get()[0]?.MoveElementUp(5);//move to top
 	            else $("#sidebarBoxLinklist").get()[0]?.MoveElementDown(5);// back to bot
             });
-            let label_checkbox_linkerlisttop = document.createElement("label");
-            label_checkbox_linkerlisttop.innerText = "Bring to top";
             this.appendChild(checkbox_linkerlisttop);
-            this.appendChild(label_checkbox_linkerlisttop);
         });
     }
 
@@ -170,33 +184,33 @@ class Global{
             timer.Init();
             elements.push(timer);
         }
-        row.appendChild(new VillageRowAdv(elements));
+        let row_adv = new VillageRowAdv(elements);
+        row_adv.style.gridTemplateColumns = "repeat(4, 1fr)";
+        row.appendChild(row_adv);
     }
 
-    private static _TroopTrain_Data: {[key in TroopBuilding]: { color:string, name:string }} = 
-    {
-        [Building.Barracks]: { color: "#0069FF", name: "b" },
-        [Building.GreatBarracks]: { color: "#78A5D3", name: "B" },
-        [Building.Stable]: { color: "#7700F6", name: "s" },
-        [Building.GreatStable]: { color: "#C574F3", name: "S" },
-        [Building.Workshop]: { color: "#C84545", name: "w" },
-    };
+    
     private static Villagelist_Show_TroopTrain(row: HTMLElement, village: VillageData): void{
         let elements: HTMLElement[] = [];
         for(let key in village.TroopTrains){
             let val = village.TroopTrains[key];
             let building: Building = Number(key);
 
-            let timer = new TsTimerElement();
-            timer.IsSound = true;
-            timer.EndIime = val.EndTime;
-            timer.Color = Global._TroopTrain_Data[building].color;
-            timer.AdvText = Global._TroopTrain_Data[building].name + ":%s";
-            timer.NavigateUrl = `/build.php?newdid=${village.VillageId}&gid=${building}`;
-            timer.Init();
-            elements.push(timer);
+            if(val.IsEnable)
+            {
+                let timer = new TsTimerElement();
+                timer.IsSound = true;
+                timer.EndIime = val.EndTime;
+                timer.Color = TroopTrain_Data[building].color;
+                timer.AdvText = TroopTrain_Data[building].name + ":%s";
+                timer.NavigateUrl = `/build.php?newdid=${village.VillageId}&gid=${building}`;
+                timer.Init();
+                elements.push(timer);
+            }
         }   
-        row.appendChild(new VillageRowAdv(elements));
+        let row_adv = new VillageRowAdv(elements);
+        row_adv.style.gridTemplateColumns = "repeat(5, 1fr)";
+        row.appendChild(row_adv);
     }
 
     private static Villagelist_Show_Celebration(row: HTMLElement, village: VillageData): void{
@@ -210,14 +224,22 @@ class Global{
             timer.Init();
             elements.push(timer);
         }
-        row.appendChild(new VillageRowAdv(elements));
+        let row_adv = new VillageRowAdv(elements);
+        row_adv.style.gridTemplateColumns = "repeat(1, 1fr)";
+        row.appendChild(row_adv);
     }
 
     private static Villagelist_Show_Resource(row: HTMLElement, village: VillageData): void{ 
         let elements: HTMLElement[] = [];
-        
-        
-        row.appendChild(new VillageRowAdv(elements));
+        for(let key in village.Resources){
+            let span = document.createElement("span");
+            span.innerText = village.Resources[key].toLocaleString();
+            span.style.textAlign = "right";
+            elements.push(span);
+        }
+        let row_adv = new VillageRowAdv(elements);
+        row_adv.style.gridTemplateColumns = "repeat(4, 1fr)";
+        row.appendChild(row_adv);
     }
 
     private static Villagelist_Show_AttackRed(row: HTMLElement, village: VillageData): void{
@@ -233,7 +255,9 @@ class Global{
             timer.Init();
             elements.push(timer);
         }
-        row.appendChild(new VillageRowAdv(elements));
+        let row_adv = new VillageRowAdv(elements);
+        row_adv.style.gridTemplateColumns = "repeat(1, 1fr)";
+        row.appendChild(row_adv);
     }
 
 //----------------------Villagelist------------------------------------------
@@ -242,6 +266,8 @@ class Global{
 public static Init_ResourceWrapper() : void{
     $(".resourceWrapper").each(function(){
         let vals = $(this).find(".resource span");
+        if(vals.length < 4) vals = $(this).find(".resources span");
+        if(vals.length < 4) return;
         let total: number = 0;
         total += Number(vals[0].innerText);
         total += Number(vals[1].innerText);

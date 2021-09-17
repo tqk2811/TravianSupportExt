@@ -4,4 +4,4 @@ class VillageRowAdv extends HTMLElement{
         if(elements) elements.forEach(element => { this.appendChild(element); });
     }
 }
-customElements.define('ts-village-adv', VillageRowAdv);
+customElements.define('ts-village-row-adv', VillageRowAdv);

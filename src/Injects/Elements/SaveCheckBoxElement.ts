@@ -1,35 +1,36 @@
 type SaveCheckBoxCallback = ((checked: boolean) => void);
-
 class SaveCheckBoxElement extends HTMLElement{
-    constructor(name: string, callback: SaveCheckBoxCallback = null){
+    constructor(state: boolean, text: string, callback: SaveCheckBoxCallback){
         super();
-        this._name = name;
+        if(callback == null || state == null) throw new Error("Invalid parameters");
+        let root = this;
         this._callback = callback;
 
         this._input = document.createElement("input");
         this._input.type = "checkbox";
-        this.attachShadow({mode: 'open'}).appendChild(this._input);
+        this._shadow = this.attachShadow({mode: 'open'});
+        this._shadow.appendChild(this._input);
 
-        let account = AccountData.GetCurrent();
-        if(account.CheckboxData[name]) 
-        {
-            this._input.checked = true;
-            if(this._callback) this._callback.call(this, this._input.checked);
+        if(text && text != ''){
+            this._label = document.createElement("label");
+            this._label.innerText = text;
+            this._label.onclick = () => { root.click();};
+            this._shadow.appendChild(this._label);
         }
+
+        this._input.checked = state;
         this._input.onchange = this.CheckedChange.bind(this);
     }
+    private _shadow: ShadowRoot;
     private _input: HTMLInputElement;
-    private _name: string;
+    private _label: HTMLLabelElement;
     private _callback: SaveCheckBoxCallback = null;
 
-    private Loaded(){
-        if(this._input.checked  && this._callback) this._callback.call(this, this._input.checked);
+    public override click(){
+        this._input.click();
     }
     private CheckedChange(){
-        let account = AccountData.GetCurrent();
-        if(this._callback) this._callback.call(this, this._input.checked);
-        account.CheckboxData[this._name] = this._input.checked;
-        account.Save();
+        this._callback.call(this, this._input.checked);
     }
 }
 customElements.define('save-checkbox', SaveCheckBoxElement);

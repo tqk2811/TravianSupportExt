@@ -96,8 +96,8 @@ class Statistics {
     }
 
     private static NumCountAtt(className: string, color: string): void {
-        $("." + className).each(function (index, element) {
-            let e = $(element);
+        $("." + className).each(function () {
+            let e = $(this);
             let alt = e.attr("alt");
             if (alt) {
                 let count = alt.match(/\d+x/);

@@ -61,9 +61,21 @@ type NumArray4 = [number, number, number, number];
 type TypeTroopTrains = { [key : number]: TroopTrain };
 
 class TroopTrain {
+    constructor(){
+        this.IsEnable = false;
+        this.EndTime = 0;
+    }
     public IsEnable: boolean;
     public EndTime: number;
 }
+const TroopTrain_Data: {[key in TroopBuilding]: { color:string, name:string }} = 
+    {
+        [Building.Barracks]: { color: "#0069FF", name: "b" },
+        [Building.GreatBarracks]: { color: "#78A5D3", name: "B" },
+        [Building.Stable]: { color: "#7700F6", name: "s" },
+        [Building.GreatStable]: { color: "#C574F3", name: "S" },
+        [Building.Workshop]: { color: "#C84545", name: "w" },
+    };
 
 class Resources{
     constructor(lumber: number, claypit: number, iron: number, crop: number){

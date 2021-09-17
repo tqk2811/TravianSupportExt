@@ -8,17 +8,18 @@ $(function () {
     Statistics.Reader();
 
 
-
-
-    
     Statistics.Render();
     Dorf.Render();
-
+    Build.Render();
+    Alliance.Render();
+    
     //global
     Global.Init_SidebarBox_ActiveVillage();
     Global.Init_SidebarBox_Linklist();
     Global.Init_SidebarBox_Villagelist();
     Global.Init_ResourceWrapper();
-    
+
+
     TsTimerElement.Start();
+    HotKeys.Init();
 });

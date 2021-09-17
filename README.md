@@ -1,1 +1,1 @@
-"# TravianSupportExt" 
+# TravianSupportExt
