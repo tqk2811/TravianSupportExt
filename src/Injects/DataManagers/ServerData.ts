@@ -33,7 +33,7 @@ class ServerData implements IServerData {
 
 
     public Save(): void {
-        localStorage.setItem("TsServer", JSON.stringify(this));
+        localStorage.setItem("TsServer", JSON.stringify(this.serverData));
     }
     public static Load(): ServerData {
         let data = localStorage.getItem("TsServer");
