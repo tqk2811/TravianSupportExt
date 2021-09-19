@@ -1,4 +1,4 @@
-class Statistics {
+class Village {
     public static Reader(): void {
         if (window.Instance.isPlus && window.location.pathname.startsWith("/village/statistics")) {
             let maintab = window.Instance.e_ActiveTabMain;
@@ -61,8 +61,8 @@ class Statistics {
                 switch (href) {
                     case "/village/statistics/overview":
                         {
-                            Statistics.NumCountAtt("att1", "color:red;");
-                            Statistics.NumCountAtt("att3", "color:#E6E6FA");
+                            Village.NumCountAtt("att1", "color:red;");
+                            Village.NumCountAtt("att3", "color:#E6E6FA");
                             $(".unit").each(function (index, element) {
                                 let e = $(element);
                                 let alt = e.attr("alt");

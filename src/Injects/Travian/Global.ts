@@ -34,7 +34,7 @@ class Global{
             }
         }
 
-        $("#sidebarBoxActiveVillage .content").each(function(){
+        $("#sidebarBoxActiveVillage .content .loyalty").each(function(){
             let select = document.createElement("select");
             for(let key in VillageAdvanced){
                 if (isNaN(Number(key))) {
@@ -53,7 +53,7 @@ class Global{
                 Global.Villagelist_RenderVillageRowAdv(account);
             }
             select.onchange = select_onchange;
-            $(this).append(select);
+            $(this).get()[0].insertAdjacentElement("afterbegin",select);
             HotKeys.Push(81,function(){
                 let val_str =  VillageAdvanced[Number(select.value) + 1];
                 let val = VillageAdvanced.None;
@@ -61,6 +61,12 @@ class Global{
                 select.value = val.toString();
                 select_onchange();
             });
+
+
+            let img_setting = document.createElement("img");
+            img_setting.src = window.TsResources.svg_setting;
+            img_setting.className = "tjs-svg";
+            $(this).get()[0].insertAdjacentElement("afterbegin",img_setting);
         });
     }
 
@@ -167,11 +173,13 @@ class Global{
     private static _build_Color: string[] = ["Blue","BlueGray","Gray"];
     private static Villagelist_Show_Build(row: HTMLElement, village: VillageData): void{
         let elements: HTMLElement[] = [];
-        village.BuildsEndTime.forEach((val: number, index: number) => {
+        let index = 0;
+        village.BuildsEndTime.forEach((val: number) => {
+            if(val < Date.now() || index == 3) return;
             let timer = new TsTimerElement();
             timer.IsSound = true;
             timer.EndIime = val;
-            timer.Color = Global._build_Color[index];
+            timer.Color = Global._build_Color[index++];
             timer.Init();
             elements.push(timer);
         });
@@ -189,7 +197,6 @@ class Global{
         row.appendChild(row_adv);
     }
 
-    
     private static Villagelist_Show_TroopTrain(row: HTMLElement, village: VillageData): void{
         let elements: HTMLElement[] = [];
         for(let key in village.TroopTrains){

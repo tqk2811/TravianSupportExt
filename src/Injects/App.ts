@@ -5,10 +5,10 @@ $(function () {
     let currentVillage = VillageData.Load(window.Instance.villageId);
     currentVillage.Read();
     currentVillage.Save();    
-    Statistics.Reader();
+    Village.Reader();
 
 
-    Statistics.Render();
+    Village.Render();
     Dorf.Render();
     Build.Render();
     Alliance.Render();

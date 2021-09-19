@@ -18,9 +18,9 @@ let scripts = [
 
     'js/Injects/Elements/SaveCheckBoxElement.js',
     'js/Injects/Elements/TsTimerElement.js',
-    'js/Injects/Elements/VillageRowAdv.js',
+    'js/Injects/Elements/VillageRowAdvElement.js',
 
-    'js/Injects/Travian/Statistics.js',
+    'js/Injects/Travian/Village.js',
     'js/Injects/Travian/Global.js',
     'js/Injects/Travian/Dorf.js',
     'js/Injects/Travian/Build.js',

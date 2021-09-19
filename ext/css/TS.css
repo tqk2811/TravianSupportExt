@@ -61,9 +61,21 @@ ts-village-row-adv span{
 	font-size: 12px;
 	line-height: 8px;
 }
+.tjs-fast-click{
+	height: 16px;
+}
+.tjs-fast-click > *{
+	margin: 0px 25px 0px 0px;
+}
 
-
-
+.tjs-svg{
+	vertical-align: middle;	
+	width: 20px;
+    height: 20px;
+}
+.loyalty .tjs-svg{
+	margin-right: 3px;
+}
 .tjs-menu{
 	float:right;
 	width:100%;
