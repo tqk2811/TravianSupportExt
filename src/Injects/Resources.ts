@@ -5,9 +5,18 @@ interface TsResources{
     svg_close:string;
     svg_setting:string;
 }
+interface Game{
+    language:string;
+    bcpLanguageCode:string;
+    speed:number;
+    version:number;
+}
+interface Travian{
+    Game: Game;
+}
 interface Window {
     TsResources: TsResources;
-    Travian: any;
+    Travian: Travian;
 }
 
 let TSRoot = localStorage.getItem('TSRoot');

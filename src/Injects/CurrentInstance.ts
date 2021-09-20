@@ -26,8 +26,6 @@ class CurrentInstance{
         this._e_TabSubs = document.querySelectorAll(".contentNavi div.container");
         this._e_ActiveTabSub = document.querySelector(".contentNavi div.container.active");
 
-        this._Server = ServerData.Load();
-
         console.log("TravianSupport Ext: UserName:" + this._UserName 
             + ", isPlus:" + this._isPlus
             + ", Gid:" + this._Gid
@@ -90,9 +88,6 @@ class CurrentInstance{
     }
     public get e_ActiveTabSub(): Element{
         return this._e_ActiveTabSub;
-    }
-    public get Server(): ServerData{
-        return this._Server;
     }
 }
 

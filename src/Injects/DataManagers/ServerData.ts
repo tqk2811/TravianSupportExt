@@ -1,33 +1,14 @@
-enum TroopId {
-
-}
-
-class Troop {
-    public Id: number;
-    public Name: string;
-    public Resources: NumArray4;
-}
-
-class Hero {
-    public Name: string;
-    public Exp: number;
-    public UpdateTime: number;
-}
-
-type Heros = { [userName: string]: Hero };
 interface IServerData{
-    Troops: Troop[];
+    Troops: TroopData;
     Heros : Heros;
 }
-
-
 class ServerData implements IServerData {
     private constructor(private serverData: IServerData) {
         //this.Troops = new Array<Troop>();
         this.Heros = {} as { [userName: string]: Hero };
         this.Save();
     }
-    public get Troops(): Troop[] { return this.serverData.Troops; }
+    public get Troops(): TroopData { return this.serverData.Troops; }
     public get Heros():Heros { return this.serverData.Heros; }
     public set Heros(val : Heros) { this.serverData.Heros = val; }
 
@@ -43,7 +24,7 @@ class ServerData implements IServerData {
         }
         else return new ServerData({
             Heros: {} as { [userName: string]: Hero },
-            Troops: []
+            Troops: {}
         });
     }
 }

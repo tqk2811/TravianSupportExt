@@ -271,18 +271,22 @@ class Global{
 
 
 public static Init_ResourceWrapper() : void{
-    $(".resourceWrapper").each(function(){
-        let vals = $(this).find(".resource span");
-        if(vals.length < 4) vals = $(this).find(".resources span");
+    let func = function(){
+        let vals = $(this).find(":is(.resource, .resources) span");
+        //if(vals.length < 4) vals = $(this).find(".resources span");
         if(vals.length < 4) return;
         let total: number = 0;
         total += Number(vals[0].innerText);
         total += Number(vals[1].innerText);
         total += Number(vals[2].innerText);
         total += Number(vals[3].innerText);
+        $(this)
+            .addClass("tjs-resourceWrapper")
+            .append(`<div class="inlineIcon resource tjs-resourceWrapper"><span class="value value">∑ = ${total}</span></div>`);
+    }
 
-        $(this).append(`<div class="inlineIcon resource"><span class="value value">∑ = ${total}</span></div>`);
-    });
+    $(".resourceWrapper").each(func);
+    $(document).on("DOMNodeInserted", ".tip-contents .resourceWrapper:not(.tjs-resourceWrapper)", func);
 }
 
 

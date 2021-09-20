@@ -1,5 +1,5 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "Travian Support",
     "description": "Travian Support",
     "version": "0.0.1",
@@ -10,30 +10,28 @@
           "path": "blockRule.json"
         }]
     },
-    "permissions": [        
-        "declarativeNetRequest"
+    "content_security_policy": "script-src 'self' https://tqk2811.github.io; object-src 'self'",
+    "permissions": [
+        "declarativeNetRequest",
+        "activeTab",
+        "tabs"
     ],
+    "browser_action" :{},
     "background": {
-        "service_worker": "/js/BackGround.js"
+        "scripts": ["/js/BackGround.js"],
+        "persistent": true
     },
+    "options_page": "options.html",
     "content_scripts" : [
         {
             "run_at" : "document_idle",
             "matches": [
                 "https://*.travian.com/*"
             ],
-            "css":[
-                "css/TS.css"
-            ],
             "js": [
                 "/js/Inject.js"
             ]
         }
     ],
-    "web_accessible_resources":[
-        {
-            "resources": [ "/res/*", "/js/*" ],
-            "matches": [ "https://*.travian.com/*" ]
-        }
-    ]
+    "web_accessible_resources":[ "/res/*", "/js/*", "/css/*" ]
 }

@@ -87,6 +87,38 @@ ts-village-row-adv span{
 {
 	height: 21px;
 }
+.tjs-market-top{
+	width: 100%;
+	display: inline-grid;
+	grid-template-columns: 45% 55%;
+	
+}
+.tjs-market-top .tjs-left{
+	grid-template-rows: auto auto;
+}
+.tjs-market-top .tjs-left save-checkbox{
+	grid-row-start: 1;
+}
+.tjs-market-top .tjs-left :not(save-checkbox){
+	grid-row-start: 2;
+}
+.tjs-market-top .tjs-left label{
+	margin-left: 3px;
+}
+.tjs-market-top .tjs-left select{
+	width : 160px;
+}
+.tjs-market-top .tjs-left input{
+	width : 50px;
+}
+
+.tjs-market-top .tjs-right{
+	grid-template-rows: auto auto auto;
+}
+
+
+
+
 
 #sidebarBoxVillagelist .expansionSlotInfo .boxTitle
 {

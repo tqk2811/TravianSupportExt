@@ -1,24 +1,9 @@
-enum VillageAdvanced {
-    None,
-    Build,
-    TroopTrains,
-    Celebration,
-    Resource,
-    AttackRed
-}
-class LinkedList {
-    public openNewTab: boolean;
-    public Name: string;
-    public Url: string;
-}
-
 interface IAccountData{
     UserName: string;
     LinkedList: LinkedList[];
     CheckboxData: CheckboxData;
     VillageAdvanced: VillageAdvanced;
 }
-type CheckboxData = { [key: string]: boolean };
 
 class AccountData implements IAccountData {
     private constructor(private accountData: IAccountData) {

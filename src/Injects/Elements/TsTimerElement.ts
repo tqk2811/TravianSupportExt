@@ -17,6 +17,7 @@ class TsTimerElement extends HTMLElement{
         this.Counting = TimerCounting.Down;
         this.isLoaded = false;
         this.AdvText = "%s";
+        this.IsEnd = false;
     }
 
     private isLoaded: boolean;
@@ -26,7 +27,7 @@ class TsTimerElement extends HTMLElement{
     public Color: string;
     public IsSound: boolean;
     public AdvText: string;
-    //public IsFlag: boolean;
+    public IsEnd: boolean;
     //public IsShowZero: boolean;
     public EndIime: number;//milisec
 
@@ -66,10 +67,11 @@ class TsTimerElement extends HTMLElement{
                 timerElement.innerText =  timerElement.AdvText.format(diff.GetTimeTextFromMiliSecondLeft());
                 timerElement.isLoaded = true;
             }
-            else if(!timerElement.isLoaded)
+            else if(!timerElement.isLoaded || !timerElement.IsEnd)
             {
                 timerElement.innerText = timerElement.AdvText.format("00:00");
                 timerElement.isLoaded = true;
+                timerElement.IsEnd = true;
             }
         });
     }
