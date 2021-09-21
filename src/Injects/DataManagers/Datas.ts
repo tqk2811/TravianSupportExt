@@ -102,6 +102,16 @@ const TroopTrain_Data: {[key in TroopBuilding]: { color:string, name:string }} =
         [Building.Workshop]: { color: "#C84545", name: "w" },
     };
 
+class MarketResources{
+    constructor(Resources: Resources, RunTwice: number){
+        this.Resources = Resources;
+        this.RunTwice = RunTwice;
+    }
+    public Resources: Resources;
+    public RunTwice: number;
+}
+type ConstResources = { [key : string]: MarketResources };
+
 class Resources{
     constructor(lumber: number, claypit: number, iron: number, crop: number){
         this.Lumber = lumber;
@@ -117,6 +127,16 @@ class Resources{
     public static FromNumArray4(arr : NumArray4): Resources{
         return new Resources(arr[0], arr[1], arr[2], arr[3]);
     }
+
+    private static _ConstResources : ConstResources = {
+        "c_0" : new MarketResources(Resources.FromNumArray4([6400,6650,5940,1340]), 1),
+        "c_1" : new MarketResources(Resources.FromNumArray4([29700,33250,32000,6700]), 1),
+        "c_2" : new MarketResources(Resources.FromNumArray4([14850,16625,16000,3350]), 2),
+        "c_3" : new MarketResources(Resources.FromNumArray4([9900,11084,10667,2234]), 3),
+    }
+
+
+    public static get CelebrationResources() : ConstResources { return Resources._ConstResources; }
 }
 
 
@@ -135,7 +155,7 @@ class Troop {
     public Name: TroopName;
     public Resources: Resources;
 }
-type TroopData = { [key: number]: Troop };
+type TroopData = { [key: number | string]: Troop };
 
 
 

@@ -5,6 +5,13 @@ interface TravianTooltip{
 interface HTMLElement{
     _travianTooltip: TravianTooltip;
 }
+interface Object{
+    FirstKey(): string;
+}
+Object.defineProperty(Object.prototype, "FirstKey", 
+{ 
+    value: function() : string { for(let key in this) return key; return null; }
+})
 
 interface Element{
     Remove(): void;

@@ -1,18 +1,15 @@
 class Dorf{
     public static Render(): void{
         if(window.location.pathname.startsWith("/dorf")){
-            //red att
-            $("#movements .att1").parent().attr("href","/build.php?gid=16&tt=1&filter=1&subfilters=1");
+            $("#movements .def1").parent().attr("href","/build.php?gid=16&tt=1&filter=1&subfilters=2,3");//all def in
+            $("#movements .def2").parent().attr("href","/build.php?gid=16&tt=1&filter=2&subfilters=5");//def yellow out
+            $("#movements .def3").parent().attr("href","/build.php?gid=16&tt=1&filter=1&subfilters=2,3");//all def in
 
-            //Violet att (oasis)
-            $("#movements .att3").parent().attr("href","/build.php?gid=16&tt=1&filter=1&subfilters=1");
+            $("#movements .att1").parent().attr("href","/build.php?gid=16&tt=1&filter=1&subfilters=1");//red att
+            $("#movements .att2").parent().attr("href","/build.php?gid=16&tt=1&filter=2&subfilters=4");//att yellow out
+            $("#movements .att3").parent().attr("href","/build.php?gid=16&tt=1&filter=1&subfilters=1");//Violet att (oasis)
 
-            //def green in
-            $("#movements .def1").parent().attr("href","/build.php?gid=16&tt=1&filter=1&subfilters=2,3");
-
-            //def yellow out
-            $("#movements .def2").parent().attr("href","/build.php?gid=16&tt=1&filter=2&subfilters=5");
-
+            $("#troops .unit").parent().attr("href","/build.php?gid=16&tt=1&filter=3");
         }
     }
 }

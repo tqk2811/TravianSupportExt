@@ -113,11 +113,19 @@ ts-village-row-adv span{
 }
 
 .tjs-market-top .tjs-right{
+	height: 54px;
 	grid-template-rows: auto auto auto;
 }
-
-
-
+.tjs-market-top .tjs-right div{
+	width: 100%;
+}
+.tjs-market-resource{
+	line-height: 22px;
+}
+.tjs-market-top .tjs-right .tjs-market-storage{
+	grid-template-columns: 50% 50%;
+	display: inline-grid;
+}
 
 
 #sidebarBoxVillagelist .expansionSlotInfo .boxTitle

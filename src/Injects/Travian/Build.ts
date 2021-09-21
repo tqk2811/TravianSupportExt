@@ -122,15 +122,71 @@ class Build{
                 if($(val).hasClass("active")) return;
                 let option = document.createElement("option");
                 option.value = $(val).find(".name").text();
+                option.setAttribute("village-id", $(val).attr("data-did"));
                 datalist.appendChild(option);
             });
             document.body.appendChild(datalist);
 
             //enterVillageName
             let func_Render_destinationSelect = function(){
-                $("#marketSend .destinationSelect").addClass("tjs_enterVillageName");
+                $("#marketSend .destinationSelect").addClass("tjs_enterVillageName");                
+                $("#x2").on("change", Build.Marketplace_SelectChange);
                 $("#marketSend #enterVillageName")
                     .attr("list", "tjs_villageDataList")
+                    .on("change", function(){
+                        let target_village_id = $(`#tjs_villageDataList option[value='${$(this).val()}']`).attr("village-id");
+                        if(target_village_id && target_village_id != '')
+                        {
+                            let village_target = VillageData.Load(Number(target_village_id));
+
+                            let timer = new TsTimerElement();
+                            timer.AdvText = "Last update %s ago.";
+                            timer.Counting = TimerCounting.Up;
+                            timer.EndIime = village_target.LastUpdateAt;
+                            timer.Init();
+                            $(".tjs-market-top .tjs-right .tjs-market-timer").html(timer);
+
+                            $(".tjs-market-top .tjs-right .tjs-market-resource").html(
+                                `
+                                <div class="inlineIconList resourceWrapper">
+                                    <div class="inlineIcon">
+                                        <i class="r1"></i>
+                                        <span class="value value">${village_target.Resources.Lumber}</span>
+                                    </div>
+                                    <div class="inlineIcon">
+                                        <i class="r2"></i>
+                                        <span class="value value">${village_target.Resources.Claypit}</span>
+                                    </div>
+                                    <div class="inlineIcon">
+                                        <i class="r3"></i>
+                                        <span class="value value">${village_target.Resources.Iron}</span>
+                                    </div>
+                                    <div class="inlineIcon">
+                                        <i class="r4"></i>
+                                        <span class="value value">${village_target.Resources.Crop}</span>
+                                    </div>
+                                </div>`
+                            );
+                        // <div class="inlineIcon tjs-resourceWrapper">
+                        //     <span class="value value">∑=${village_target.Resources.Lumber + village_target.Resources.Claypit + village_target.Resources.Iron + village_target.Resources.Crop}</span>
+                        // </div>
+                            $(".tjs-market-top .tjs-right .tjs-market-storage").html(
+                                `
+                                <div>
+                                    Warehouse: ${village_target.Storage}
+                                </div>
+                                <div>
+                                    Granary: ${village_target.Granary}
+                                </div>`);
+                        }
+                        else
+                        {
+                            $(".tjs-market-top .tjs-right .tjs-market-timer").html("");
+                            $(".tjs-market-top .tjs-right .tjs-market-resource").html("");
+                            $(".tjs-market-top .tjs-right .tjs-market-storage").html("");
+                        }
+                        Build.Marketplace_SelectChange();
+                    })
                     .closest("tr")
                     .append(`<td><img src="${window.TsResources.svg_close}" class="tjs-svg" onclick="$('#enterVillageName').val('')"></td>`);
             };
@@ -149,6 +205,7 @@ class Build{
                 return e_option;
             };
             let account = AccountData.GetCurrent();
+            let server = ServerData.Load();
 
             let div_market = document.createElement("div");
             div_market.className = "tjs-market-top";
@@ -186,6 +243,7 @@ class Build{
             //row 2
             //type_select
             let type_select = document.createElement("select");
+            type_select.id = "tjs-market-type";
             type_select.appendChild(func_createOptions("-1", ""));
 
             type_select.appendChild(func_createOptions("b_0","Balance current village"));
@@ -195,24 +253,38 @@ class Build{
             type_select.appendChild(func_createOptions("c_1","Big Celebration"));
             type_select.appendChild(func_createOptions("c_2","Big Celebration / 2"));
             type_select.appendChild(func_createOptions("c_3","Big Celebration / 3"));
-
+            for(let key in account.CheckboxData){
+                if(key.startsWith("cb_troopShowOnMarket_")){
+                    let id = key.substring(21);
+                    let troop: Troop = server.Troops[id];
+                    if(troop)
+                    {
+                        let name:string = troop.Name[window.Travian.Game.language];
+                        if(!name) name = troop.Name[troop.Name.FirstKey()];
+                        type_select.appendChild(func_createOptions(id, name));
+                    }
+                }
+            }
             
-
+            type_select.onchange = Build.Marketplace_SelectChange;
             div_left_market.appendChild(type_select);
             
-            //input & label
+            //input
             let input_number = document.createElement("input");
+            input_number.id = "tjs-market-number";
             input_number.setAttribute("type","number");
             input_number.setAttribute("min","0");
             input_number.setAttribute("max","0");
-            //input_number.setAttribute("onchange","gid17_input_number_onchange()");
+            input_number.onchange =  Build.Marketplace_NumChange;
             
+            //label
             let label_number_max = document.createElement("label");
+            label_number_max.id = "tjs-market-number-max";
             label_number_max.innerText = "/0";
-            // label_number_max.onclick = function(){
-            //                                             gid17_input_number.value = gid17_input_number.max;
-            //                                             gid17_input_number_onchange();															
-            //                                         };
+            label_number_max.onclick = function(){
+                $(".tjs-market-number").val($(".tjs-market-number").attr("max"));
+                Build.Marketplace_NumChange();
+            };
 
             div_left_market.appendChild(input_number);
             div_left_market.appendChild(label_number_max);
@@ -220,20 +292,88 @@ class Build{
 
 
             //---------------------------------right---------------------------------
+            let div_timer = document.createElement("div");
+            div_timer.className = "tjs-market-timer";
+            let div_resource = document.createElement("div");
+            div_resource.className = "tjs-market-resource";
+            let div_storage = document.createElement("div");
+            div_storage.className = "tjs-market-storage";
             
-
+            div_right_market.appendChild(div_timer);
+            div_right_market.appendChild(div_resource);
+            div_right_market.appendChild(div_storage);
             //---------------------------------right---------------------------------
         });
     }
-    private static Marketplace_DataList_enterVillageName() : void{
+    private static Marketplace_SelectChange() : void{
+        let type =  $("#tjs-market-type").val();
+        let input_number = $("#tjs-market-number");
+        let label_number = $("#tjs-market-number-max");
+        let x2 = $("#x2").val();
+        let enterVillageName = $("#enterVillageName").val();
+        let target_village_id: string = null;
+        if(enterVillageName && enterVillageName != ''){
+            target_village_id = $(`#tjs_villageDataList option[value='${enterVillageName}']`).attr("village-id");
+        }
+
+
+        let server = ServerData.Load();
+        let account = AccountData.GetCurrent();
+        let village_current = VillageData.GetCurrent();
+        let village_target : VillageData = target_village_id ? VillageData.Load(Number(target_village_id)) : null;
+        
+        switch(type){
+            case "-1" : //reset
+            input_number.prop("max",0);
+            input_number.val("0");
+            label_number.html("/0");
+            Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+            break;
+
+            case "b_0" : 
+            case "b_1" : 
+
+            break;
+            		
+            case "c_0" : 
+            case "c_1" : 
+            case "c_2" : 
+            case "c_3" : 
+            input_number.prop("max",1);
+            input_number.val("1");
+            label_number.html("/1");
+            let data = Resources.CelebrationResources[type];
+            Build.Marketplace_SetResource(data.Resources, data.RunTwice);
+            break;
+
+            default :
+            Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+            let id = Number(type);
+            let troop : Troop = server.Troops[id];
+
+
+
+            break;
+        }
+    }
+    private static Marketplace_NumChange() : void{
         
     }
 
-
-
-
-
-
-
-
+    private static Marketplace_SetResource(res: Resources, run_twice: number = 1) : void{
+        $("#send_select #r1").val(res.Lumber);
+        $("#send_select #r2").val(res.Claypit);
+        $("#send_select #r3").val(res.Iron);
+        $("#send_select #r4").val(res.Crop);
+        let x2 = $("#x2");
+        if(x2.prop("tagName") == "SELECT")
+        {
+            x2.val(run_twice);
+        }
+        else 
+        {
+            if(run_twice == 1) x2.prop("checked", false);
+            else x2.prop("checked", true);
+        }
+    }
 }

@@ -35,6 +35,7 @@ class TsTimerElement extends HTMLElement{
         let e = this;
         if(this.Color) this.style.color = this.Color;
         if(this.NavigateUrl) this.onclick = function(){location.href = e.NavigateUrl};
+        if(this.AdvText) this.innerText = this.AdvText.format("__:__");
     }
 
 
