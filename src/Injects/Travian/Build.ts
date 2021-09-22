@@ -131,7 +131,7 @@ class Build{
             });
             document.body.appendChild(datalist);
 
-            //enterVillageName
+            //destination render
             let func_Render_destinationSelect = function(){
                 $("#marketSend .destinationSelect").addClass("tjs_enterVillageName");                
                 $("#x2").on("change", Build.Marketplace_SelectChange);
@@ -143,8 +143,14 @@ class Build{
                         {
                             let village_target = VillageData.Load(Number(target_village_id));
 
+                            $(".tjs-slider.tjs-village-target .tjs-slider-input")
+                                .attr("village-id",village_target.VillageId.toString())
+                                .prop("disabled", false)
+                                .prop("value", village_target.BalanceMax.toString())
+                                .trigger("change");
+
                             let timer = new TsTimerElement();
-                            timer.AdvText = "Last update %s ago.";
+                            timer.AdvText = "Updated %s ago.";
                             timer.Counting = TimerCounting.Up;
                             timer.EndIime = village_target.LastUpdateAt;
                             timer.Init();
@@ -188,11 +194,76 @@ class Build{
                             $(".tjs-market-top .tjs-right .tjs-market-timer").html("");
                             $(".tjs-market-top .tjs-right .tjs-market-resource").html("");
                             $(".tjs-market-top .tjs-right .tjs-market-storage").html("");
+                            $(".tjs-slider.tjs-village-target .tjs-slider-input").prop("disabled", true);
                         }
                         Build.Marketplace_SelectChange();
                     })
                     .closest("tr")
                     .append(`<td><img src="${window.TsResources.svg_close}" class="tjs-svg" onclick="$('#enterVillageName').val('')"></td>`);
+
+                //slider
+                $("#marketSend .destination").each(function(){
+                    let village_current = VillageData.GetCurrent();
+                    let div_current = document.createElement("div");
+                    div_current.className = "tjs-slider tjs-village-current";
+                    
+                    let slider_current_label = document.createElement("label");
+                    slider_current_label.className = "tjs-slider-label";
+                    slider_current_label.innerText = `${village_current.BalanceMin}%`;
+
+                    let slider_current = document.createElement("input");
+                    slider_current.type = "range";
+                    slider_current.min = "0";
+                    slider_current.max = "100";
+                    slider_current.value = village_current.BalanceMin.toString();
+                    slider_current.setAttribute("village-id", window.Instance.villageId.toString());
+                    slider_current.className = "tjs-slider-input";
+                    slider_current.onchange = function(){ 
+                        let village = VillageData.GetCurrent();
+                        village.BalanceMin = Number(slider_current.value);
+                        village.Save();
+                        Build.Marketplace_SelectChange();
+                    };
+                    slider_current.oninput = function(){ 
+                        slider_current_label.innerText = slider_current.value + "%";
+                    };
+
+                    div_current.appendChild(slider_current);
+                    div_current.appendChild(slider_current_label);
+
+
+
+                    let div_target = document.createElement("div");
+                    div_target.className = "tjs-slider tjs-village-target";
+
+                    let slider_target_label = document.createElement("label");
+                    slider_target_label.className = "tjs-slider-label";
+                    slider_target_label.innerText = "85%";
+
+                    let slider_target = document.createElement("input");
+                    slider_target.type = "range";
+                    slider_target.min = "0";
+                    slider_target.max = "100";
+                    slider_target.value = "85";
+                    slider_target.className = "tjs-slider-input";
+                    slider_target.disabled = true;
+                    slider_target.onchange = function(){
+                        let village = VillageData.Load(Number(slider_target.getAttribute("village-id")));
+                        village.BalanceMax = Number(slider_target.value);
+                        village.Save();
+                        Build.Marketplace_SelectChange();
+                    };
+                    slider_target.oninput = function(){ 
+                        slider_target_label.innerText = slider_target.value + "%";
+                    };
+                    
+
+                    div_target.appendChild(slider_target);
+                    div_target.appendChild(slider_target_label);
+
+                    $(this).append(div_current);
+                    $(this).append(div_target);
+                });
             };
             
             func_Render_destinationSelect();
@@ -321,7 +392,7 @@ class Build{
                 input_number.prop("max",0);
                 input_number.val("0");
                 label_number.html("/0");
-                Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+                Build.Marketplace_SetResource([0,0,0,0], 1);
             }
             break;
 
@@ -356,19 +427,42 @@ class Build{
                 let server = ServerData.Load();
                 let id = Number(type);
                 let troop : ITroop = server.Troops[id];
-                let min_res : number = Math.floor(Math.min(
-                    village_current.Resources.Lumber/troop.Resources.Lumber, 
-                    village_current.Resources.Claypit/troop.Resources.Claypit, 
-                    village_current.Resources.Iron/troop.Resources.Iron, 
-                    village_current.Resources.Crop/troop.Resources.Crop));
-                let max_market : number = Math.floor(Number($("#merchantCapacityValue").text()) * Build.Marketplace_GetRunTwice()
-                                            / (troop.Resources.Lumber + troop.Resources.Claypit + troop.Resources.Iron + troop.Resources.Crop));
+
+                let village_target : VillageData = null;
+                let resources_target: IResources = new Resources([0,0,0,0]);
+                let storage_target = 9999999;
+                let granary_target = 9999999;
+                let village_id_target = Number($(".tjs-slider.tjs-village-target .tjs-slider-input").attr("village-id"));
+                if(!Number.isNaN(village_id_target)){
+                    village_target = VillageData.Load(village_id_target);
+                    resources_target = village_target.Resources;
+                    storage_target = village_target.Storage * village_target.BalanceMax / 100;
+                    granary_target = village_target.Granary * village_target.BalanceMax / 100;
+                }
+
+                //avalable current
+                let current_save_storage = village_current.Storage * village_current.BalanceMin / 100;
+                let current_save_granary = village_current.Granary * village_current.BalanceMin / 100;
+                let current_balance: Resources = new Resources(village_current.Resources)
+                    .Minus([current_save_storage, current_save_storage, current_save_storage, current_save_granary])
+                    .AlwaysPositive();
+
+                let min_canSend : number = current_balance.Add(resources_target).Divide(troop.Resources).Min().floor();
+
+                //max market can send
+                let multiple = Build.Marketplace_GetRunTwice();
+                let max_market : number = Math.floor(Number($("#merchantCapacityValue").text()) * multiple / Resources.Total(troop.Resources));
                 
-                let min : number = Math.min(min_res,max_market);
+                //can received target
+                let max_target : number = new Resources([storage_target,storage_target,storage_target,granary_target]).Divide(troop.Resources).Min().floor();
+
+                console.log(`min_canSend:${min_canSend}, max_market:${max_market}, max_target:${max_target}`);
+                let min : number = Math.min(min_canSend, max_market, max_target);
+                if(min < 0) min = 0;
                 input_number.prop("max", min);
                 input_number.val(0);
                 label_number.html(`/${min}`);
-                Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+                Build.Marketplace_SetResource([0,0,0,0], multiple);
             }
             break;
         }
@@ -378,7 +472,7 @@ class Build{
         let input_number = $("#tjs-market-number");
         switch(type){
             case "-1" : //reset            
-            Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+            Build.Marketplace_SetResource([0,0,0,0], 1);
             break;
 
             case "b_0" : 
@@ -405,11 +499,16 @@ class Build{
                 let num = Number(input_number.val());
                 let multiple = Build.Marketplace_GetRunTwice();
 
-                Build.Marketplace_SetResource(new Resources(
-                    Math.round(troop.Resources.Lumber * num / multiple),
-                    Math.round(troop.Resources.Claypit * num / multiple),
-                    Math.round(troop.Resources.Iron * num / multiple),
-                    Math.round(troop.Resources.Crop * num / multiple)), multiple);
+                let village_target : VillageData = null;
+                let resources_target: IResources = new Resources([0,0,0,0]);
+                let village_id_target = Number($(".tjs-slider.tjs-village-target .tjs-slider-input").attr("village-id"));
+                if(!Number.isNaN(village_id_target)){
+                    village_target = VillageData.Load(village_id_target);
+                    resources_target = village_target.Resources;
+                }
+
+                //troop.Resources.Lumber * num - resources_target.Lumber)/ multiple
+                Build.Marketplace_SetResource(Resources.Multiple(troop.Resources, num).Minus(resources_target).Divide(multiple).floor(), multiple);
             }
             break;
         }
@@ -423,11 +522,22 @@ class Build{
             else return 1;
         }
     }
-    private static Marketplace_SetResource(res: Resources, run_twice: number = 1) : void{
-        $("#send_select #r1").val(res.Lumber);
-        $("#send_select #r2").val(res.Claypit);
-        $("#send_select #r3").val(res.Iron);
-        $("#send_select #r4").val(res.Crop);
+    private static Marketplace_SetResource(res: IResources | TNumArray4, run_twice: number = 1) : void{
+        if(Array.isArray(res))
+        {
+            $("#send_select #r1").val(res[0]);
+            $("#send_select #r2").val(res[1]);
+            $("#send_select #r3").val(res[2]);
+            $("#send_select #r4").val(res[3]);
+        }
+        else
+        {
+            $("#send_select #r1").val(res.Lumber);
+            $("#send_select #r2").val(res.Claypit);
+            $("#send_select #r3").val(res.Iron);
+            $("#send_select #r4").val(res.Crop);
+        }
+        
         for(let i = 1; i <= 4 ; i++) window.marketPlace.validateAndVisualizeMerchantCapacity(i);
         let x2 = $("#x2");
         if(x2.prop("tagName") == "SELECT")

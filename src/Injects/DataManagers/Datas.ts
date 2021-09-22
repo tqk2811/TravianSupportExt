@@ -108,12 +108,24 @@ interface IResources{
     Iron: number;
     Crop: number;
 }
+
+
 class Resources implements IResources{
-    constructor(lumber: number, claypit: number, iron: number, crop: number){
-        this.Lumber = lumber;
-        this.Claypit = claypit;
-        this.Iron = iron;
-        this.Crop = crop;
+    constructor(resource: IResources | TNumArray4){
+        if(Array.isArray(resource))
+        {
+            this.Lumber = resource[0];
+            this.Claypit = resource[1];
+            this.Iron = resource[2];
+            this.Crop = resource[3];
+        }
+        else
+        {
+            this.Lumber = resource.Lumber;
+            this.Claypit = resource.Claypit;
+            this.Iron = resource.Iron;
+            this.Crop = resource.Crop;
+        }
     }
     public Lumber: number;
     public Claypit: number;
@@ -121,7 +133,126 @@ class Resources implements IResources{
     public Crop: number;
 
     public static FromNumArray4(arr : TNumArray4): Resources{
-        return new Resources(arr[0], arr[1], arr[2], arr[3]);
+        return new Resources([arr[0], arr[1], arr[2], arr[3]]);
+    }
+
+
+
+
+    public Divide(b: number | IResources | TNumArray4) : Resources{
+        return Resources.Divide(this, b);
+    }
+    public static Divide(a: IResources, b: number | IResources | TNumArray4): Resources{
+        if(typeof b === "number")
+            return new Resources([a.Lumber / b, a.Claypit / b, a.Iron / b, a.Crop / b]);
+        else if(Array.isArray(b))
+            return new Resources([a.Lumber / b[0], a.Claypit / b[1], a.Iron / b[2], a.Crop / b[3]]);
+        else
+            return new Resources([a.Lumber / b.Lumber, a.Claypit / b.Claypit, a.Iron / b.Iron, a.Crop / b.Crop]);
+    }
+
+
+    public Multiple(b: number | IResources | TNumArray4) : Resources{
+        return Resources.Multiple(this, b);
+    }
+    public static Multiple(a: IResources, b: number | IResources | TNumArray4): Resources{
+        if(typeof b === "number")
+            return new Resources([a.Lumber * b, a.Claypit * b, a.Iron * b, a.Crop * b]);
+        else if(Array.isArray(b))
+            return new Resources([a.Lumber * b[0], a.Claypit * b[1], a.Iron * b[2], a.Crop * b[3]]);
+        else
+            return new Resources([a.Lumber * b.Lumber, a.Claypit * b.Claypit, a.Iron * b.Iron, a.Crop * b.Crop]);
+    }
+
+
+    public Minus(b: number | IResources | TNumArray4) : Resources{
+        return Resources.Minus(this, b);
+    }
+    public static Minus(a: IResources, b: number | IResources | TNumArray4): Resources{
+        if(typeof b === "number")
+            return new Resources([a.Lumber - b, a.Claypit - b, a.Iron - b, a.Crop - b]);
+        else if(Array.isArray(b))
+            return new Resources([a.Lumber - b[0], a.Claypit - b[1], a.Iron - b[2], a.Crop - b[3]]);
+        else
+            return new Resources([a.Lumber - b.Lumber, a.Claypit - b.Claypit, a.Iron - b.Iron, a.Crop - b.Crop]);
+    }
+
+
+    public Add(b: number | IResources | TNumArray4) : Resources{
+        return Resources.Add(this, b);
+    }
+    public static Add(a: IResources, b:  number | IResources | TNumArray4): Resources{
+        if(typeof b === "number")
+            return new Resources([a.Lumber + b, a.Claypit + b, a.Iron + b, a.Crop + b]);
+        else if(Array.isArray(b))
+            return new Resources([a.Lumber + b[0], a.Claypit + b[1], a.Iron + b[2], a.Crop + b[3]]);
+        else
+            return new Resources([a.Lumber + b.Lumber, a.Claypit + b.Claypit, a.Iron + b.Iron, a.Crop + b.Crop]);
+    }
+
+
+    public AlwaysPositive() : Resources{
+        return Resources.AlwaysPositive(this);
+    }
+    public static AlwaysPositive(a: IResources | TNumArray4): Resources{
+        if(Array.isArray(a))
+            return new Resources([Math.max(0, a[0]), Math.max(0, a[1]), Math.max(0, a[2]), Math.max(0, a[3])]);
+        else
+            return new Resources([Math.max(0, a.Lumber), Math.max(0, a.Claypit), Math.max(0, a.Iron), Math.max(0, a.Crop)]);
+    }
+
+
+    public Max() : number{
+        return Resources.Max(this);
+    }
+    public static Max(a: IResources | TNumArray4): number{
+        if(Array.isArray(a))
+            return Math.max(a[0], a[1], a[2], a[3]);
+        else
+            return Math.max(a.Lumber, a.Claypit, a.Iron, a.Crop);
+    }
+
+
+    public Min() : number{
+        return Resources.Min(this);
+    }
+    public static Min(a: IResources | TNumArray4): number{
+        if(Array.isArray(a))
+            return Math.min(a[0], a[1], a[2], a[3]);
+        else 
+            return Math.min(a.Lumber, a.Claypit, a.Iron, a.Crop);
+    }
+
+
+    public floor(): Resources{
+        return Resources.floor(this);
+    }
+    public static floor(a: IResources | TNumArray4): Resources{
+        if(Array.isArray(a))
+            return new Resources([Math.floor(a[0]), Math.floor(a[1]), Math.floor(a[2]), Math.floor(a[3])]);
+        else
+            return new Resources([Math.floor(a.Lumber), Math.floor(a.Claypit), Math.floor(a.Iron), Math.floor(a.Crop)]);
+    }
+
+
+    public round(): Resources{
+        return Resources.round(this);
+    }
+    public static round(a: IResources | TNumArray4): Resources{
+        if(Array.isArray(a))
+            return new Resources([Math.round(a[0]), Math.round(a[1]), Math.round(a[2]), Math.round(a[3])]);
+        else
+            return new Resources([Math.round(a.Lumber), Math.round(a.Claypit), Math.round(a.Iron), Math.round(a.Crop)]);
+    }
+
+    public Total(): number{
+        return Resources.Total(this);
+    }
+    public static Total(a: IResources | TNumArray4): number{
+        if(Array.isArray(a))
+            return a[0] + a[1] + a[2] + a[3];
+        else
+            return a.Lumber + a.Claypit + a.Iron + a.Crop;
     }
 
     private static _ConstResources : TConstResources = {

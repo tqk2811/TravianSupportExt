@@ -106,7 +106,7 @@ ts-village-row-adv span{
 	margin-left: 3px;
 }
 .tjs-market-top .tjs-left select{
-	width : 160px;
+	width : 150px;
 }
 .tjs-market-top .tjs-left input{
 	width : 50px;
@@ -123,8 +123,20 @@ ts-village-row-adv span{
 	line-height: 22px;
 }
 .tjs-market-top .tjs-right .tjs-market-storage{
-	grid-template-columns: 50% 50%;
+	grid-template-columns: auto auto;
 	display: inline-grid;
+}
+.tjs-slider{
+	width: 100%;
+	grid-template-columns: 84% 12%;
+	display: inline-grid;
+}
+.tjs-slider .tjs-slider-input{
+	height:16px;
+}
+.tjs-slider .tjs-slider-label{
+	float:right; 
+	height: 16px;
 }
 
 

@@ -84,6 +84,8 @@ interface Number{
     GetTimeTextFromSecondLeft(): string;
     GetTimeTextFromHour(): string;
     zeroPad(length : number): string;
+    floor(): number;
+    round(): number;
 }
 Number.prototype.zeroPad = function(length : number) : string{
     return String(this).padStart(length, '0');
@@ -113,6 +115,12 @@ Number.prototype.GetTimeTextFromHour = function() : string{
     text_ =  min_.zeroPad(2) + ":" + text_;
     if(hour_ > 0) text_ = hour_.zeroPad(2) + ":" + text_;
     return text_;
+}
+Number.prototype.floor = function(): number{
+    return Math.floor(this);
+}
+Number.prototype.round = function(): number{
+    return Math.round(this);
 }
 
 interface IMarketPlace{

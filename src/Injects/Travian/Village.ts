@@ -22,7 +22,7 @@ class Village {
                                     let crop = Number(row.find("td.crop").text().trim().getASCII().replaceAll(",", "").replaceAll(".", ""));
 
                                     let village = VillageData.Load(id);
-                                    village.Resources = new Resources(lum, clay, iron, crop);
+                                    village.Resources = new Resources([lum, clay, iron, crop]);
                                     village.Save();
                                 }
                             });

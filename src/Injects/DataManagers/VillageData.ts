@@ -8,12 +8,15 @@ interface IVillageData{
 
     Storage: number;
     Granary: number;
-    Resources: Resources;
+    Resources: IResources;
 
     LastUpdateAt: number;
 
     AttackCount: number;
     AttackFirstEndTime: number;
+
+    BalanceMax: number;
+    BalanceMin: number;
 }
 
 class VillageData implements IVillageData {
@@ -36,32 +39,32 @@ class VillageData implements IVillageData {
     public set CelebrationEndTime(val:number){ this.villageData.CelebrationEndTime = val; }//update from load /village/statistics
 
     public get Storage(): number{ return this.villageData.Storage; }
-    //private set Storage(val:number){ this.villageData.Storage = val; }
-
     public get Granary(): number{ return this.villageData.Granary; }
-    //private set Granary(val:number){ this.villageData.Granary = val; }
     
-    public get Resources(): Resources{ return this.villageData.Resources; }
-    public set Resources(val:Resources){ this.villageData.Resources = val; }//update from load /village/statistics
+    public get Resources(): IResources{ return this.villageData.Resources; }
+    public set Resources(val: IResources){ this.villageData.Resources = val; }//update from load /village/statistics
     
     public get LastUpdateAt(): number{ return this.villageData.LastUpdateAt; }
-    //private set LastUpdateAt(val:number){ this.villageData.LastUpdateAt = val; }
 
     public get AttackCount(): number{ return this.villageData.AttackCount; }
-    //private set AttackCount(val:number){ this.villageData.AttackCount = val; }
 
     public get AttackFirstEndTime(): number{ return this.villageData.AttackFirstEndTime; }
-    //private set AttackFirstEndTime(val:number){ this.villageData.AttackFirstEndTime = val; }
+
+    public get BalanceMax(): number{ return this.villageData.BalanceMax; }
+    public set BalanceMax(val: number){ this.villageData.BalanceMax = val; }
+
+    public get BalanceMin(): number{ return this.villageData.BalanceMin; }
+    public set BalanceMin(val: number){ this.villageData.BalanceMin = val; }
 
     public Read(): void {
         this.villageData.Storage = Number($("#stockBar .warehouse .capacity .value").text().getASCII().replaceAll(".", "").replaceAll(",", ""));
         this.villageData.Granary = Number($("#stockBar .granary .capacity .value").text().getASCII().replaceAll(".", "").replaceAll(",", ""));
-        this.Resources = new Resources(
+        this.Resources = new Resources([
             Number($("#l1").text().trim().getASCII().replaceAll(".", "").replaceAll(",", "")),
             Number($("#l2").text().trim().getASCII().replaceAll(".", "").replaceAll(",", "")),
             Number($("#l3").text().trim().getASCII().replaceAll(".", "").replaceAll(",", "")),
             Number($("#l4").text().trim().getASCII().replaceAll(".", "").replaceAll(",", ""))
-        );
+        ]);
 
         switch (window.Instance.Gid) {
             case Building.None:
@@ -149,7 +152,7 @@ class VillageData implements IVillageData {
             if(!villageData.VillageId) villageData.VillageId = villageId;
             if(!villageData.BuildsEndTime) villageData.BuildsEndTime = [];
             if(!villageData.TroopTrains) villageData.TroopTrains = {};
-            if(!villageData.Resources) villageData.Resources = new Resources(0,0,0,0);
+            if(!villageData.Resources) villageData.Resources = new Resources([0,0,0,0]);
             return new VillageData(villageData);
         }
         else return new VillageData({
@@ -160,10 +163,12 @@ class VillageData implements IVillageData {
             CelebrationEndTime: 0,
             Storage: 0,
             Granary: 0,
-            Resources: new Resources(0,0,0,0),
+            Resources: new Resources([0,0,0,0]),
             LastUpdateAt: 0,
             AttackCount:0,
-            AttackFirstEndTime:0
+            AttackFirstEndTime:0,
+            BalanceMax:85,
+            BalanceMin:0
         });
     }
 
