@@ -35,15 +35,19 @@ class Build{
             let class_ = unit.attr("class");
             let unit_id = Number(class_.match(/u([0-9]+)/)[1]);
             let name = unit.attr("alt");
-            let resources: NumArray4 = [0,0,0,0];
+            let resources: TNumArray4 = [0,0,0,0];
             for(let i = 0; i < 4; i++){
                 resources[i] = Number($(resourceWrappers[i]).find("span.value").text());
             }
 
-            let troop = new Troop();
-            troop.Name[window.Travian.Game.language] = name;
-            troop.Resources = Resources.FromNumArray4(resources);
-            server.Troops[unit_id] = troop;
+            if(!server.Troops[unit_id]) 
+                server.Troops[unit_id] = 
+                {
+                    Name: { },
+                    Resources: Resources.FromNumArray4(resources)
+                };
+            server.Troops[unit_id].Name[window.Travian.Game.language] = name;
+            server.Troops[unit_id].Resources = Resources.FromNumArray4(resources);
 
             let state_showOnMarket : boolean = account.CheckboxData[`cb_troopShowOnMarket_${unit_id}`];
             if(state_showOnMarket == null) state_showOnMarket = false;
@@ -67,7 +71,7 @@ class Build{
                 let village = VillageData.GetCurrent();
 
                 if (!village.TroopTrains[window.Instance.Gid]) 
-                    village.TroopTrains[window.Instance.Gid] = new TroopTrain();
+                    village.TroopTrains[window.Instance.Gid] = { EndTime: 0, IsEnable: false };
 
                 village.TroopTrains[window.Instance.Gid].IsEnable = state;
                 village.Save();
@@ -256,7 +260,7 @@ class Build{
             for(let key in account.CheckboxData){
                 if(key.startsWith("cb_troopShowOnMarket_")){
                     let id = key.substring(21);
-                    let troop: Troop = server.Troops[id];
+                    let troop: ITroop = server.Troops[id];
                     if(troop)
                     {
                         let name:string = troop.Name[window.Travian.Game.language];
@@ -282,7 +286,7 @@ class Build{
             label_number_max.id = "tjs-market-number-max";
             label_number_max.innerText = "/0";
             label_number_max.onclick = function(){
-                $(".tjs-market-number").val($(".tjs-market-number").attr("max"));
+                $("#tjs-market-number").val($("#tjs-market-number").attr("max"));
                 Build.Marketplace_NumChange();
             };
 
@@ -309,62 +313,122 @@ class Build{
         let type =  $("#tjs-market-type").val();
         let input_number = $("#tjs-market-number");
         let label_number = $("#tjs-market-number-max");
-        let x2 = $("#x2").val();
         let enterVillageName = $("#enterVillageName").val();
-        let target_village_id: string = null;
-        if(enterVillageName && enterVillageName != ''){
-            target_village_id = $(`#tjs_villageDataList option[value='${enterVillageName}']`).attr("village-id");
-        }
 
-
-        let server = ServerData.Load();
-        let account = AccountData.GetCurrent();
-        let village_current = VillageData.GetCurrent();
-        let village_target : VillageData = target_village_id ? VillageData.Load(Number(target_village_id)) : null;
-        
         switch(type){
             case "-1" : //reset
-            input_number.prop("max",0);
-            input_number.val("0");
-            label_number.html("/0");
-            Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+            {
+                input_number.prop("max",0);
+                input_number.val("0");
+                label_number.html("/0");
+                Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+            }
             break;
 
             case "b_0" : 
             case "b_1" : 
+            {
+                let target_village_id: string = $(`#tjs_villageDataList option[value='${enterVillageName}']`).attr("village-id");
+                let village_target : VillageData = Number.isNaN(Number(target_village_id)) ? null : VillageData.Load(Number(target_village_id));
+                let village_current = VillageData.GetCurrent();
 
+
+
+            }
             break;
             		
             case "c_0" : 
             case "c_1" : 
             case "c_2" : 
             case "c_3" : 
-            input_number.prop("max",1);
-            input_number.val("1");
-            label_number.html("/1");
-            let data = Resources.CelebrationResources[type];
-            Build.Marketplace_SetResource(data.Resources, data.RunTwice);
+            {
+                input_number.prop("max",1);
+                input_number.val("1");
+                label_number.html("/1");
+                let data = Resources.CelebrationResources[type];
+                Build.Marketplace_SetResource(data.Resources, data.RunTwice);
+            }
             break;
 
             default :
-            Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
-            let id = Number(type);
-            let troop : Troop = server.Troops[id];
-
-
-
+            {
+                let village_current = VillageData.GetCurrent();
+                let server = ServerData.Load();
+                let id = Number(type);
+                let troop : ITroop = server.Troops[id];
+                let min_res : number = Math.floor(Math.min(
+                    village_current.Resources.Lumber/troop.Resources.Lumber, 
+                    village_current.Resources.Claypit/troop.Resources.Claypit, 
+                    village_current.Resources.Iron/troop.Resources.Iron, 
+                    village_current.Resources.Crop/troop.Resources.Crop));
+                let max_market : number = Math.floor(Number($("#merchantCapacityValue").text()) * Build.Marketplace_GetRunTwice()
+                                            / (troop.Resources.Lumber + troop.Resources.Claypit + troop.Resources.Iron + troop.Resources.Crop));
+                
+                let min : number = Math.min(min_res,max_market);
+                input_number.prop("max", min);
+                input_number.val(0);
+                label_number.html(`/${min}`);
+                Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+            }
             break;
         }
     }
     private static Marketplace_NumChange() : void{
-        
-    }
+        let type =  $("#tjs-market-type").val();
+        let input_number = $("#tjs-market-number");
+        switch(type){
+            case "-1" : //reset            
+            Build.Marketplace_SetResource(new Resources(0,0,0,0), 1);
+            break;
 
+            case "b_0" : 
+            case "b_1" : 
+            {
+
+            }
+            break;
+            		
+            case "c_0" : 
+            case "c_1" : 
+            case "c_2" : 
+            case "c_3" : 
+            {
+
+            }
+            break;
+
+            default :
+            {
+                let server = ServerData.Load();
+                let id = Number(type);
+                let troop : ITroop = server.Troops[id];
+                let num = Number(input_number.val());
+                let multiple = Build.Marketplace_GetRunTwice();
+
+                Build.Marketplace_SetResource(new Resources(
+                    Math.round(troop.Resources.Lumber * num / multiple),
+                    Math.round(troop.Resources.Claypit * num / multiple),
+                    Math.round(troop.Resources.Iron * num / multiple),
+                    Math.round(troop.Resources.Crop * num / multiple)), multiple);
+            }
+            break;
+        }
+    }
+    private static Marketplace_GetRunTwice(): number{
+        let x2 = $("#x2");
+        if(x2.prop("tagName") == "SELECT") return Number(x2.val());
+        else 
+        {
+            if(x2.prop("checked") == "true") return 2; 
+            else return 1;
+        }
+    }
     private static Marketplace_SetResource(res: Resources, run_twice: number = 1) : void{
         $("#send_select #r1").val(res.Lumber);
         $("#send_select #r2").val(res.Claypit);
         $("#send_select #r3").val(res.Iron);
         $("#send_select #r4").val(res.Crop);
+        for(let i = 1; i <= 4 ; i++) window.marketPlace.validateAndVisualizeMerchantCapacity(i);
         let x2 = $("#x2");
         if(x2.prop("tagName") == "SELECT")
         {

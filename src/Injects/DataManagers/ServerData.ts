@@ -1,16 +1,14 @@
 interface IServerData{
-    Troops: TroopData;
-    Heros : Heros;
+    Troops: TTroopData;
+    Heros : THeros;
 }
 class ServerData implements IServerData {
     private constructor(private serverData: IServerData) {
-        //this.Troops = new Array<Troop>();
-        this.Heros = {} as { [userName: string]: Hero };
-        this.Save();
+        
     }
-    public get Troops(): TroopData { return this.serverData.Troops; }
-    public get Heros():Heros { return this.serverData.Heros; }
-    public set Heros(val : Heros) { this.serverData.Heros = val; }
+    public get Troops(): TTroopData { return this.serverData.Troops; }
+    public get Heros() : THeros { return this.serverData.Heros; }
+    //public set Heros(val : THeros) { this.serverData.Heros = val; }
 
 
     public Save(): void {
@@ -23,7 +21,7 @@ class ServerData implements IServerData {
             return new ServerData(accountData);
         }
         else return new ServerData({
-            Heros: {} as { [userName: string]: Hero },
+            Heros: {},
             Troops: {}
         });
     }

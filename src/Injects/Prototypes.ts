@@ -115,9 +115,12 @@ Number.prototype.GetTimeTextFromHour = function() : string{
     return text_;
 }
 
-
+interface IMarketPlace{
+    validateAndVisualizeMerchantCapacity(num: number): void;
+}
 
 
 interface Window{
     Instance: CurrentInstance;
+    marketPlace: IMarketPlace;
 }

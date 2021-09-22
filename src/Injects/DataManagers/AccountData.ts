@@ -1,7 +1,7 @@
 interface IAccountData{
     UserName: string;
-    LinkedList: LinkedList[];
-    CheckboxData: CheckboxData;
+    LinkedList: ILinkedList[];
+    CheckboxData: TCheckboxData;
     VillageAdvanced: VillageAdvanced;
 }
 
@@ -11,9 +11,9 @@ class AccountData implements IAccountData {
     }
     public get UserName(): string { return this.accountData.UserName; }
     
-    public get LinkedList(): LinkedList[] { return this.accountData.LinkedList; }
+    public get LinkedList(): ILinkedList[] { return this.accountData.LinkedList; }
     //public set LinkedList(val :LinkedList[]){ this.accountData.LinkedList = val; }
-    public get CheckboxData(): CheckboxData { return this.accountData.CheckboxData; }
+    public get CheckboxData(): TCheckboxData { return this.accountData.CheckboxData; }
 
     public get VillageAdvanced(): VillageAdvanced { return this.accountData.VillageAdvanced; }
     public set VillageAdvanced(val :VillageAdvanced){ this.accountData.VillageAdvanced = val; }

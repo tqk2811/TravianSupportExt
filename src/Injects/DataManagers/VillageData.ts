@@ -3,7 +3,7 @@ interface IVillageData{
 
     BuildsEndTime: number[];
     DemolishEndTime: number;
-    TroopTrains: TypeTroopTrains;
+    TroopTrains: TTroopTrains;
     CelebrationEndTime: number;
 
     Storage: number;
@@ -29,7 +29,7 @@ class VillageData implements IVillageData {
     public get DemolishEndTime(): number{ return this.villageData.DemolishEndTime; }
     //private set DemolishEndTime(val:number){ this.villageData.DemolishEndTime = val; }
 
-    public get TroopTrains(): TypeTroopTrains { return this.villageData.TroopTrains; }
+    public get TroopTrains(): TTroopTrains { return this.villageData.TroopTrains; }
     //private set TroopTrains(val: TroopTrains){ this.villageData.TroopTrains = val; }
 
     public get CelebrationEndTime(): number{ return this.villageData.CelebrationEndTime; }
@@ -88,7 +88,7 @@ class VillageData implements IVillageData {
 
                             default:
                                 if (!this.TroopTrains[window.Instance.Gid]) 
-                                    this.TroopTrains[window.Instance.Gid] = new TroopTrain();
+                                    this.TroopTrains[window.Instance.Gid] = { EndTime: 0, IsEnable: false };
                                 this.TroopTrains[window.Instance.Gid].EndTime = Date.now() + (Number(val) * 1000);
                                 break;
                         }
