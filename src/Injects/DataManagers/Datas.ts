@@ -136,6 +136,9 @@ class Resources implements IResources{
         return new Resources([arr[0], arr[1], arr[2], arr[3]]);
     }
 
+    public ToArray4(): TNumArray4{
+        return [this.Lumber, this.Claypit, this.Iron, this.Crop];
+    }
 
 
 
@@ -212,6 +215,16 @@ class Resources implements IResources{
             return Math.max(a.Lumber, a.Claypit, a.Iron, a.Crop);
     }
 
+    public MaxKey(): string {
+        let keys = Object.keys( this );
+        let key: string = keys[0];
+        for(let i = 1; i < keys.length; i++)
+        {
+            if(this[keys[i]] > this[key])
+                key = keys[i];
+        }
+        return key;
+    }
 
     public Min() : number{
         return Resources.Min(this);
@@ -223,6 +236,16 @@ class Resources implements IResources{
             return Math.min(a.Lumber, a.Claypit, a.Iron, a.Crop);
     }
 
+    public MinKey(): string {
+        let keys = Object.keys( this );
+        let key: string = keys[0];
+        for(let i = 1; i < keys.length; i++)
+        {
+            if(this[keys[i]] < this[key])
+                key = keys[i];
+        }
+        return key;
+    }
 
     public floor(): Resources{
         return Resources.floor(this);
@@ -263,6 +286,10 @@ class Resources implements IResources{
     }
 
     public static get CelebrationResources() : TConstResources { return Resources._ConstResources; }
+
+    public toString(): string {
+        return JSON.stringify(this);
+    }
 }
 
 

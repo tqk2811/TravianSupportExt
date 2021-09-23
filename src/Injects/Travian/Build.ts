@@ -348,6 +348,7 @@ class Build{
             let input_number = document.createElement("input");
             input_number.id = "tjs-market-number";
             input_number.setAttribute("type","number");
+            input_number.setAttribute("value","0");
             input_number.setAttribute("min","0");
             input_number.setAttribute("max","0");
             input_number.onchange =  Build.Marketplace_NumChange;
@@ -392,19 +393,20 @@ class Build{
                 input_number.prop("max",0);
                 input_number.val("0");
                 label_number.html("/0");
-                Build.Marketplace_SetResource([0,0,0,0], 1);
+                Build.Marketplace_SetResource([0,0,0,0]);
             }
             break;
 
             case "b_0" : 
             case "b_1" : 
             {
-                let target_village_id: string = $(`#tjs_villageDataList option[value='${enterVillageName}']`).attr("village-id");
-                let village_target : VillageData = Number.isNaN(Number(target_village_id)) ? null : VillageData.Load(Number(target_village_id));
-                let village_current = VillageData.GetCurrent();
+                let multiple = Build.Marketplace_GetRunTwice();
+                let max_Send : number = Math.floor(Number($("#merchantCapacityValue").text()) * multiple / Build.Marketplace_Balance);
 
-
-
+                label_number.html(`x${Build.Marketplace_Balance}`);
+                input_number.prop("max", max_Send);
+                if(Number(input_number.val()) > max_Send) input_number.val(max_Send);
+                Build.Marketplace_NumChange();
             }
             break;
             		
@@ -460,25 +462,81 @@ class Build{
                 let min : number = Math.min(min_canSend, max_market, max_target);
                 if(min < 0) min = 0;
                 input_number.prop("max", min);
-                input_number.val(0);
+                if(Number(input_number.val()) > min) input_number.val(min);
                 label_number.html(`/${min}`);
-                Build.Marketplace_SetResource([0,0,0,0], multiple);
+                Build.Marketplace_NumChange();
             }
             break;
         }
     }
+    private static Marketplace_Balance : number = 100;
     private static Marketplace_NumChange() : void{
+        console.log("Marketplace_NumChange");
+
         let type =  $("#tjs-market-type").val();
         let input_number = $("#tjs-market-number");
         switch(type){
-            case "-1" : //reset            
-            Build.Marketplace_SetResource([0,0,0,0], 1);
+            case "-1" : //reset
+            //Build.Marketplace_SetResource([0,0,0,0]);
             break;
 
             case "b_0" : 
             case "b_1" : 
             {
+                let isCurrent = type == "b_0";
+                let enterVillageName = $("#enterVillageName").val();
+                let multiple = Build.Marketplace_GetRunTwice();
+                let target_village_id: string = $(`#tjs_villageDataList option[value='${enterVillageName}']`).attr("village-id");
+                let village_target : VillageData = Number.isNaN(Number(target_village_id)) ? null : VillageData.Load(Number(target_village_id));
+                let village_current = VillageData.GetCurrent();
 
+                //limit current
+                let balance_storage_current = village_current.Storage * village_current.BalanceMin / 100;
+                let balance_granary_current = village_current.Granary * village_current.BalanceMin / 100;
+                let max_can_send_current = new Resources(village_current.Resources)
+                    .Minus([balance_storage_current, balance_storage_current, balance_storage_current, balance_granary_current]);
+
+                //limit target. If target not selected, limit is 10m per resource
+                let balance_Target_Max = village_target ? village_target.BalanceMax : 100;
+                let resource_target = new Resources(village_target ? village_target.Resources : [0,0,0,0]);
+                let storage_target = village_target ? village_target.Storage : 9999999;
+                let granary_target = village_target ? village_target.Granary : 9999999;
+                let balance_storage_target = storage_target * balance_Target_Max / 100;
+                let balance_granary_target = granary_target * balance_Target_Max / 100;
+                let max_can_received_target = new Resources([balance_storage_target,balance_storage_target,balance_storage_target,balance_granary_target])
+                    .Minus(resource_target);
+
+                //limit merchant
+                let limit_merchant = Number($("#merchantCapacityValue").text()) * multiple;
+
+                //limit input
+                let limit_input = Number(input_number.val()) * Build.Marketplace_Balance * multiple;
+
+                //limit min
+                let res_send = Math.min(max_can_send_current.Total(), max_can_received_target.Total(), limit_input, limit_merchant);
+
+                if(isCurrent)
+                {
+                    //balance current
+                    let result = Build.Marketplace_BalanceCurrent(
+                        max_can_send_current,
+                        new Resources([balance_storage_current, balance_storage_current, balance_storage_current, balance_granary_current]), 
+                        max_can_received_target,
+                        res_send);
+
+                    Build.Marketplace_SetResource(result.Divide(multiple).round());
+                }
+                else if(village_target)//ignore balance target when not select target village
+                {
+                    //balance target
+                    let result = Build.Marketplace_BalanceTarget(
+                        resource_target,
+                        new Resources([balance_storage_target,balance_storage_target,balance_storage_target,balance_granary_target]),
+                        max_can_send_current,
+                        res_send);
+
+                    Build.Marketplace_SetResource(result.Divide(multiple).round());
+                }
             }
             break;
             		
@@ -487,7 +545,9 @@ class Build{
             case "c_2" : 
             case "c_3" : 
             {
-
+                input_number.val("1");
+                let data = Resources.CelebrationResources[type];
+                Build.Marketplace_SetResource(data.Resources, data.RunTwice);
             }
             break;
 
@@ -508,7 +568,7 @@ class Build{
                 }
 
                 //troop.Resources.Lumber * num - resources_target.Lumber)/ multiple
-                Build.Marketplace_SetResource(Resources.Multiple(troop.Resources, num).Minus(resources_target).Divide(multiple).floor(), multiple);
+                Build.Marketplace_SetResource(Resources.Multiple(troop.Resources, num).Minus(resources_target).Divide(multiple).floor());
             }
             break;
         }
@@ -522,7 +582,7 @@ class Build{
             else return 1;
         }
     }
-    private static Marketplace_SetResource(res: IResources | TNumArray4, run_twice: number = 1) : void{
+    private static Marketplace_SetResource(res: IResources | TNumArray4, run_twice: number = Number.NaN) : void{
         if(Array.isArray(res))
         {
             $("#send_select #r1").val(res[0]);
@@ -539,15 +599,54 @@ class Build{
         }
         
         for(let i = 1; i <= 4 ; i++) window.marketPlace.validateAndVisualizeMerchantCapacity(i);
-        let x2 = $("#x2");
-        if(x2.prop("tagName") == "SELECT")
+        if(!Number.isNaN(run_twice))
         {
-            x2.val(run_twice);
+            let x2 = $("#x2");
+            if(x2.prop("tagName") == "SELECT")
+            {
+                x2.val(run_twice);
+            }
+            else 
+            {
+                if(run_twice == 1) x2.prop("checked", false);
+                else x2.prop("checked", true);
+            }
         }
-        else 
+    }
+
+    private static Marketplace_BalanceCurrent(
+        resource_current: Resources, 
+        storage_current: Resources, 
+        resource_canReceived_target: Resources,//maybe full target
+        total_send: number, 
+        step: number = 2 * 3 * 5 //2 * 3 for easy divide 
+    ) : Resources
+    {
+        let result: Resources = new Resources([0,0,0,0]);
+        while(total_send > 0)
         {
-            if(run_twice == 1) x2.prop("checked", false);
-            else x2.prop("checked", true);
+            let maxkey = resource_current.Minus(result).Divide(storage_current).MaxKey();
+            result[maxkey] += step;
+            total_send -= step;
         }
+        return result;
+    }
+
+    private static Marketplace_BalanceTarget(
+        resource_target: Resources, 
+        storage_target: Resources,
+        resource_maxCanSend_current: Resources,//maybe not enough current
+        total_send: number, 
+        step: number = 2 * 3 * 5 //2 * 3 for easy divide 
+    ) : Resources
+    {
+        let result: Resources = new Resources([0,0,0,0]);
+        while(total_send > 0)
+        {
+            let minkey = resource_target.Add(result).Divide(storage_target).MinKey();
+            result[minkey] += step;
+            total_send -= step;
+        }
+        return result;
     }
 }
