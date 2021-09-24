@@ -22,6 +22,7 @@ let scripts = [
     'js/Injects/CurrentInstance.js',
     'js/Injects/HotKeys.js',
 
+    'js/Injects/Elements/PopUpElement.js',
     'js/Injects/Elements/SaveCheckBoxElement.js',
     'js/Injects/Elements/TsTimerElement.js',
     'js/Injects/Elements/VillageRowAdvElement.js',

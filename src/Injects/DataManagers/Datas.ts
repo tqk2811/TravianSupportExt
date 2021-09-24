@@ -278,6 +278,25 @@ class Resources implements IResources{
             return a.Lumber + a.Claypit + a.Iron + a.Crop;
     }
 
+    public FixTarget(max_received_target: IResources): Resources{
+        return new Resources([
+            this.Lumber > max_received_target.Lumber ? 0 : this.Lumber,
+            this.Claypit > max_received_target.Claypit ? 0 : this.Claypit,
+            this.Iron > max_received_target.Iron ? 0 : this.Iron,
+            this.Crop > max_received_target.Crop ? 0 : this.Crop
+        ]);
+    }
+
+    public FixCurrent(max_send_current: IResources): Resources{
+        return new Resources([
+            this.Lumber > max_send_current.Lumber ? 999999 : this.Lumber,
+            this.Claypit > max_send_current.Claypit ? 999999 : this.Claypit,
+            this.Iron > max_send_current.Iron ? 999999 : this.Iron,
+            this.Crop > max_send_current.Crop ? 999999 : this.Crop
+        ]);
+    }
+
+
     private static _ConstResources : TConstResources = {
         "c_0" : { Resources: Resources.FromNumArray4([6400,6650,5940,1340]), RunTwice : 1 },
         "c_1" : { Resources: Resources.FromNumArray4([29700,33250,32000,6700]), RunTwice : 1 },

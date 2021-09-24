@@ -66,6 +66,16 @@ class Global{
             let img_setting = document.createElement("img");
             img_setting.src = window.TsResources.svg_setting;
             img_setting.className = "tjs-svg";
+            img_setting.onclick = function(){
+                let j_popup = $("pop-up#ts-setting");
+
+                let popup : PopUpElement = null;
+                if(j_popup.length > 0) popup = j_popup.get()[0] as PopUpElement;
+                else popup = new PopUpElement("ts-setting");
+
+                
+
+            };
             $(this).get()[0].insertAdjacentElement("afterbegin",img_setting);
         });
     }
@@ -80,6 +90,13 @@ class Global{
             let img = document.createElement("img");
             img.src = window.TsResources.svg_forum;
             
+            a.onclick = function(){
+                let j_popup = $("pop-up#ts-linked-list");
+
+                let popup : PopUpElement = null;
+                if(j_popup.length > 0) popup = j_popup.get()[0] as PopUpElement;
+                else popup = new PopUpElement("ts-linked-list");
+            };
             a.appendChild(img);
             this.appendChild(a);
         });

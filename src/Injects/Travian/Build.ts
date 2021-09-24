@@ -625,7 +625,12 @@ class Build{
         let result: Resources = new Resources([0,0,0,0]);
         while(total_send > 0)
         {
-            let maxkey = resource_current.Minus(result).Divide(storage_current).MaxKey();
+            let maxkey = resource_current
+                .Minus(result)
+                .FixTarget(resource_canReceived_target)
+                .Divide(storage_current)
+                .MaxKey();
+
             result[maxkey] += step;
             total_send -= step;
         }
@@ -641,9 +646,14 @@ class Build{
     ) : Resources
     {
         let result: Resources = new Resources([0,0,0,0]);
-        while(total_send > 0)
+        while(total_send > 0)//maybe infinite loop
         {
-            let minkey = resource_target.Add(result).Divide(storage_target).MinKey();
+            let minkey = resource_target
+                .Add(result)
+                .FixCurrent(resource_maxCanSend_current)//need test more
+                .Divide(storage_target)
+                .MinKey();
+
             result[minkey] += step;
             total_send -= step;
         }

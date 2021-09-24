@@ -168,3 +168,82 @@ ts-village-row-adv span{
 .upgradeBuilding .resourceWrapper{
 	grid-template-columns: auto auto auto auto auto auto !important;
 }
+
+
+
+pop-up{
+	z-index: 99999;	
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: white;
+	padding: 1rem;
+	border-radius: 0.5rem;
+	box-shadow: 0 0 0.5rem 10px rgb(0 0 0 / 70%);
+}
+pop-up .header{
+	position: relative;
+    z-index: 2;
+	top: -30px;
+}
+pop-up .header .buttonsWrapper{
+	display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 0 25px -30px;
+}
+pop-up .header .buttonsWrapper .layoutButton{
+	margin-left: 5px;
+}
+pop-up .header img{
+	width: 20px;
+	height: 20px;
+}
+pop-up::before{
+	content: "";
+    z-index: -1;
+    position: absolute;
+    top: -5px;
+    right: -2px;
+    bottom: -5px;
+    left: -2px;
+    border-style: solid;
+    border-width: 38px 53px 38px 53px;
+    border-image: url(../res/sidebarBox.png) 38 53 38 53 fill stretch;
+}
+pop-up#ts-setting{
+	width: 400px;
+	height: 300px;
+}
+
+pop-up#ts-linked-list{
+	width: 500px;
+	height: 300px;
+}
+        
+/* this.attachShadow({mode: 'open'});
+this.shadowRoot.innerHTML = `
+	<style>
+		:host{
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0,0,0,0.5);
+			z-index: 9999;
+		}
+		.popup{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: white;
+			padding: 1rem;
+			border-radius: 0.5rem;
+			box-shadow: 0 0 0.5rem 0 rgba(0,0,0,0.5);
+		}
+	</style>`; */
