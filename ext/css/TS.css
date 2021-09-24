@@ -187,12 +187,13 @@ pop-up .header{
 	position: relative;
     z-index: 2;
 	top: -30px;
+	height: 40px;
 }
 pop-up .header .buttonsWrapper{
 	display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    margin: 0 25px -30px;
+    /* margin: 0 25px -30px; */
 }
 pop-up .header .buttonsWrapper .layoutButton{
 	margin-left: 5px;
@@ -213,14 +214,27 @@ pop-up::before{
     border-width: 38px 53px 38px 53px;
     border-image: url(../res/sidebarBox.png) 38 53 38 53 fill stretch;
 }
-pop-up#ts-setting{
-	width: 400px;
-	height: 300px;
+pop-up .content{
+	z-index: 1;
+	max-height: 500px;
+	min-height: 200px;
 }
-
-pop-up#ts-linked-list{
-	width: 500px;
-	height: 300px;
+pop-up#ts-setting .content{
+	width: 400px;
+}
+#ts-linked-list input[type="text"]{
+	width: 100%;
+}
+pop-up#ts-linked-list .content{
+	width: 700px;
+}
+pop-up#ts-linked-list .footer button{
+	float: right;
+	margin: 0 0 0 5px;
+}
+pop-up .footer{
+	height: 32px;
+	z-index: 0;
 }
         
 /* this.attachShadow({mode: 'open'});

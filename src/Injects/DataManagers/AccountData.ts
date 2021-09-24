@@ -12,7 +12,7 @@ class AccountData implements IAccountData {
     public get UserName(): string { return this.accountData.UserName; }
     
     public get LinkedList(): ILinkedList[] { return this.accountData.LinkedList; }
-    //public set LinkedList(val :LinkedList[]){ this.accountData.LinkedList = val; }
+    public set LinkedList(val :ILinkedList[]){ this.accountData.LinkedList = val; }
     public get CheckboxData(): TCheckboxData { return this.accountData.CheckboxData; }
 
     public get VillageAdvanced(): VillageAdvanced { return this.accountData.VillageAdvanced; }

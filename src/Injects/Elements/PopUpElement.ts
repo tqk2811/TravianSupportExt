@@ -18,6 +18,12 @@ class PopUpElement extends HTMLElement{
                 </a>
             </div>
         </div>
+        <div class="content">
+
+        </div>
+        <div class="footer">
+            
+        </div>
         `;
 
         $(this).find('.btn-close').click(this.Close.bind(this));
@@ -27,9 +33,13 @@ class PopUpElement extends HTMLElement{
     private offSetX: number;
     private offSetY: number;
     private mouseDown(e: MouseEvent){
-        this.isDown = true;
-        this.offSetX = this.offsetLeft - e.clientX;
-        this.offSetY = this.offsetTop - e.clientY;
+        let target =  $(e.target);
+        if(e.target == this || target.hasClass("header") || target.hasClass("buttonsWrapper"))
+        {
+            this.isDown = true;
+            this.offSetX = this.offsetLeft - e.clientX;
+            this.offSetY = this.offsetTop - e.clientY;
+        }
     }
     private mouseup(e: MouseEvent){
         this.isDown = false;

@@ -13,7 +13,9 @@
     "url": "https://github.com/tqk2811/TravianSupportExt/issues"
   },
   "homepage": "https://github.com/tqk2811/TravianSupportExt#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@types/datatables.net": "^1.10.21"
+  },
   "devDependencies": {
     "@types/jquery": "^3.5.6",
     "@types/chrome": "0.0.149"
