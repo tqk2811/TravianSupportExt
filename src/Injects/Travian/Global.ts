@@ -68,15 +68,7 @@ class Global{
             img_setting.className = "tjs-svg";
             img_setting.onclick = function(){
                 let j_popup = $("pop-up#ts-setting");
-
-                let popup : PopUpElement = null;
-                if(j_popup.length > 0) popup = j_popup.get()[0] as PopUpElement;
-                else {
-                    popup = new PopUpElement("ts-setting");
-
-
-
-                }
+                if(j_popup.length == 0) Global.GeneratePopUpSetting();
             };
             $(this).get()[0].insertAdjacentElement("afterbegin",img_setting);
         });
@@ -94,78 +86,7 @@ class Global{
             
             a.onclick = function(){
                 let j_popup = $("pop-up#ts-linked-list");
-
-                let popup : PopUpElement = null;
-                if(j_popup.length > 0) popup = j_popup.get()[0] as PopUpElement;
-                else {
-                    popup = new PopUpElement("ts-linked-list");
-
-                    let content = $(popup).find(".content");
-                    content.html(`<table></table>`);
-                    let table = content.find("table");
-
-                    let account = AccountData.GetCurrent();
-                    let datatable = table.DataTable({
-                        pagingType: "full_numbers",
-                        "paging": false,
-                        scrollY: "200px",
-                        columns: [
-                            { 
-                                data: "Name" , 
-                                title: "Name", 
-                                render: function(data :string, type, row : ILinkedList, meta : DataTables.CellMetaSettings){
-                                    return `<input type="text" value="${data}" class="linked-list-name"></input>`; 
-                                }
-                            },
-                            { 
-                                data: "Url", 
-                                title: "Link", 
-                                render: function(data :string, type, row : ILinkedList, meta : DataTables.CellMetaSettings){ 
-                                    return `<input type="text" value="${data}" class="linked-list-url"></input>`; 
-                                } 
-                            },
-                            { 
-                                data: "openNewTab", 
-                                title: "Open New Tab", 
-                                width: "90px",
-                                render: function(data :boolean, type, row : ILinkedList, meta : DataTables.CellMetaSettings){ 
-                                    return `<input type="checkbox" checked="${data}" class="linked-list-openNewTab"></input>`; 
-                                } 
-                            },
-                        ],
-                        data: account.LinkedList,
-                        searching: false,
-                        info: false,
-                    });
-                    
-                    let footer = $(popup).find(".footer").html(`
-                    <button class="textButtonV1 green" version="textButtonV1" ts-action="save">Save</button>
-                    <button class="textButtonV1 green" version="textButtonV1" ts-action="add">Add</button>
-                    `);
-                    
-                    table.on("change", "input", function(){
-                        let t = $(this);
-                        let data = datatable.row(t.closest("tr")).data() as ILinkedList;
-                        if(t.hasClass("linked-list-name")) data.Name = t.val() as string;
-                        else if(t.hasClass("linked-list-url")) data.Url = t.val() as string;
-                        else if(t.hasClass("linked-list-openNewTab")) data.openNewTab = this.prop("checked");
-                    });
-
-                    footer.find("button[ts-action='save']").on("click",function(){
-                        let linkedList : ILinkedList[] = [];
-                        datatable.rows().every(function(rowIdx, tableLoop, rowLoop){
-                            let data = this.data() as ILinkedList;
-                            console.log(data);
-                            linkedList.push({ Name: data.Name, Url: data.Url, openNewTab: data.openNewTab });
-                        });
-                        
-                        let account = AccountData.GetCurrent();
-                        account.LinkedList = linkedList;
-                        account.Save();
-                    });
-                    footer.find("button[ts-action='add']").on("click",function(){  
-                    });
-                }
+                if(j_popup.length == 0) Global.GeneratePopUpLinkedList();
             };
             a.appendChild(img);
             this.appendChild(a);
@@ -173,23 +94,32 @@ class Global{
 
         $("#sidebarBoxLinklist .content").each(function(){
             let account = AccountData.GetCurrent();
-            if( account.LinkedList && 
-                account.LinkedList.length > 0 && 
-                $("#sidebarBoxLinklist .content .linklistNotice").length > 0)
+            if( account.LinkedList && account.LinkedList.length > 0)
             {
-                $(this).find(".linklistNotice").first().remove();
-                let ul_linkerlist = document.createElement("ul");
-                this.appendChild(ul_linkerlist);
+                let linklistNotice = $(this).find(".linklistNotice");
+                if(linklistNotice.length != 0)
+                {
+                    $(this).find(".linklistNotice").first().remove();
+                    let ul_linkerlist = document.createElement("ul");
+                    this.appendChild(ul_linkerlist);
+                }
+                let ul = $(this).find("ul");
+
                 account.LinkedList.forEach(element => {
                     let li = document.createElement("li");
                     let aTag = document.createElement('a');
+                    let span = document.createElement("span");
                     aTag.href = element.Url;
-                    aTag.innerText = element.Name;
+                    if(element.openNewTab) aTag.target = "_blank";
+                    span.className = "name";
+                    span.innerText = element.Name;                    
+                    aTag.appendChild(span);
                     li.appendChild(aTag);
-                    ul_linkerlist.appendChild(li);
+                    ul.append(li);
                 });
             }
-            
+
+
             let cb_data : boolean = account.CheckboxData["sidebarBoxLinklist_bringToTop"];
             if(cb_data == null) cb_data = false;
             if(cb_data) $("#sidebarBoxLinklist").get()[0]?.MoveElementUp(5);//move to top
@@ -207,6 +137,92 @@ class Global{
         });
     }
 
+    private static GeneratePopUpLinkedList(){
+        let popup = new PopUpElement("ts-linked-list");
+
+        let content = $(popup).find(".content");
+        content.html(`<table></table>`);
+        let table = content.find("table");
+
+        let account = AccountData.GetCurrent();
+        let datatable = table.DataTable({
+            pagingType: "full_numbers",
+            "paging": false,
+            scrollY: "200px",
+            columns: [
+                { 
+                    data: "Name" , 
+                    title: "Name", 
+                    render: function(data :string, type, row : ILinkedList, meta : DataTables.CellMetaSettings){
+                        return `<input type="text" value="${data}" class="linked-list-name"></input>`; 
+                    }
+                },
+                { 
+                    data: "Url", 
+                    title: "Link", 
+                    render: function(data :string, type, row : ILinkedList, meta : DataTables.CellMetaSettings){ 
+                        return `<input type="text" value="${data}" class="linked-list-url"></input>`; 
+                    } 
+                },
+                { 
+                    data: "openNewTab", 
+                    title: "Open New Tab", 
+                    width: "90px",
+                    render: function(data :boolean, type, row : ILinkedList, meta : DataTables.CellMetaSettings){ 
+                        return `
+                        <input type="checkbox" ${data ? "checked" : "" } class="linked-list-openNewTab"></input>
+                        <button class="textButtonV1 red" version="textButtonV1" ts-action="delete">Delete</button>
+                        `; 
+                    } 
+                },
+            ],
+            data: account.LinkedList,
+            searching: false,
+            info: false
+        });
+        
+        let footer = $(popup).find(".footer").html(`
+        <button class="textButtonV1 green" version="textButtonV1" ts-action="save">Save</button>
+        <button class="textButtonV1 green" version="textButtonV1" ts-action="add">Add</button>
+        `);
+        
+        table.on("change", "input", function(){
+            let t = $(this);
+            let data = datatable.row(t.closest("tr")).data() as ILinkedList;
+            if(t.hasClass("linked-list-name")) data.Name = t.val() as string;
+            else if(t.hasClass("linked-list-url")) data.Url = t.val() as string;
+            else if(t.hasClass("linked-list-openNewTab")) data.openNewTab = this.prop("checked");
+        });
+
+        footer.find("button[ts-action='save']").on("click",function(){
+            let linkedList : ILinkedList[] = [];
+            datatable.rows().every(function(rowIdx, tableLoop, rowLoop){
+                let data = this.data() as ILinkedList;
+                console.log(data);
+                linkedList.push({ Name: data.Name, Url: data.Url, openNewTab: data.openNewTab });
+            });
+            
+            let account = AccountData.GetCurrent();
+            account.LinkedList = linkedList;
+            account.Save();
+        });
+        footer.find("button[ts-action='add']").on("click",function(){  
+            let newData : ILinkedList = {
+                Name: "New Link",
+                Url: "/dorf1.php",
+                openNewTab: false
+            }
+            datatable.row.add(newData).draw();
+        });
+    }
+
+    private static GeneratePopUpSetting(){
+        let popup = new PopUpElement("ts-setting");
+
+
+
+
+    }
 //----------------------Villagelist------------------------------------------
 
     public static Init_SidebarBox_Villagelist() : void {

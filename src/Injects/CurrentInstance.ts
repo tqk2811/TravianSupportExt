@@ -1,7 +1,9 @@
 class CurrentInstance{
     constructor(){
         this._UserName = $("#sidebarBoxActiveVillage .playerName").text();
-
+        let title = $("head title");
+        title.text(`${this._UserName} - ${title.text()}`);
+        
         this._e_build = document.getElementById("build");
         this._e_sidebarBoxVillagelist = document.getElementById("sidebarBoxVillagelist");
         if(this._e_sidebarBoxVillagelist)

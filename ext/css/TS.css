@@ -9,6 +9,9 @@ td.unit.none{
 #sidebarBoxVillagelist .shortcutsEnabled li{
 	display: block!important;
 }
+.red{
+	background: rgb(211, 80, 80);
+}
 .iconAndNameWrapper{
 	padding: 0!important;
 }
@@ -44,17 +47,14 @@ td.unit.none{
 ts-village-row-adv{
 	height: 10px;
 	z-index: 999;
+	display: inline-grid;
+    grid-column: 1 / span 2;
 }
 
 ts-village-row-adv ts-timer{
 	padding-right: 3px;
 	line-height: 8px;
     font-size: 12px;
-}
-
-ts-village-row-adv{
-	display: inline-grid;
-    grid-column: 1 / span 2;
 }
 
 ts-village-row-adv span{
@@ -168,7 +168,12 @@ ts-village-row-adv span{
 .upgradeBuilding .resourceWrapper{
 	grid-template-columns: auto auto auto auto auto auto !important;
 }
-
+.trainUnits .tjs-resourceWrapper{
+	margin-top: 0px !important;
+}
+.trainUnits .action.troop:not(.empty){
+	height: 200px!important;
+}
 
 
 pop-up{

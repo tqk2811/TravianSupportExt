@@ -31,6 +31,7 @@ class AccountData implements IAccountData {
         else return new AccountData({
             UserName: userName,
             LinkedList: [
+                { Name: "Farm List", Url: "/build.php?id=39&gid=16&tt=99", openNewTab: false },
                 { Name: "Green Attack Report", Url: "/report/offensive?opt=AAABAA==", openNewTab: false },
             ],
             CheckboxData: {},

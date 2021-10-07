@@ -56,7 +56,7 @@ class Build{
                 account.CheckboxData[`cb_troopShowOnMarket_${unit_id}`] = state;
                 account.Save();
             });
-            $(this).find(".tit").append(cb_showOnMarket);
+            $(this).find(".tit").after(cb_showOnMarket);
         });
         server.Save();
 
@@ -334,9 +334,19 @@ class Build{
                     let troop: ITroop = server.Troops[id];
                     if(troop)
                     {
-                        let name:string = troop.Name[window.Travian.Game.language];
+                        let name : string = troop.Name[window.Travian.Game.language];
                         if(!name) name = troop.Name[troop.Name.FirstKey()];
-                        type_select.appendChild(func_createOptions(id, name));
+                        let numId = Number(id);
+                        let tribe : string = "?";
+                        if(1 <= numId && numId <= 10) tribe = "Romans";
+                        else if(11 <= numId && numId <= 20) tribe = "Teutons";
+                        else if(21 <= numId && numId <= 30) tribe = "Gauls";
+                        else if(31 <= numId && numId <= 40) tribe = "Nature";
+                        else if(41 <= numId && numId <= 50) tribe = "Natar";
+                        else if(51 <= numId && numId <= 60) tribe = "Egypts";
+                        else if(61 <= numId && numId <= 70) tribe = "Huns";
+
+                        type_select.appendChild(func_createOptions(id, `${tribe} - ${name}`));
                     }
                 }
             }
@@ -393,7 +403,6 @@ class Build{
                 input_number.prop("max",0);
                 input_number.val("0");
                 label_number.html("/0");
-                Build.Marketplace_SetResource([0,0,0,0]);
             }
             break;
 
@@ -406,7 +415,6 @@ class Build{
                 label_number.html(`x${Build.Marketplace_Balance}`);
                 input_number.prop("max", max_Send);
                 if(Number(input_number.val()) > max_Send) input_number.val(max_Send);
-                Build.Marketplace_NumChange();
             }
             break;
             		
@@ -464,7 +472,6 @@ class Build{
                 input_number.prop("max", min);
                 if(Number(input_number.val()) > min) input_number.val(min);
                 label_number.html(`/${min}`);
-                Build.Marketplace_NumChange();
             }
             break;
         }
@@ -650,7 +657,7 @@ class Build{
         {
             let minkey = resource_target
                 .Add(result)
-                .FixCurrent(resource_maxCanSend_current)//need test more
+                //.FixCurrent(resource_maxCanSend_current)//need test more
                 .Divide(storage_target)
                 .MinKey();
 
