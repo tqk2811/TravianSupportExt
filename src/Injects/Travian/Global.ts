@@ -151,34 +151,45 @@ class Global{
             scrollY: "200px",
             columns: [
                 { 
+                    orderable: false,
+                    searchable: false,
                     data: "Name" , 
                     title: "Name", 
                     render: function(data :string, type, row : ILinkedList, meta : DataTables.CellMetaSettings){
                         return `<input type="text" value="${data}" class="linked-list-name"></input>`; 
                     }
                 },
-                { 
+                {
+                    orderable: false,
+                    searchable: false,
                     data: "Url", 
                     title: "Link", 
                     render: function(data :string, type, row : ILinkedList, meta : DataTables.CellMetaSettings){ 
                         return `<input type="text" value="${data}" class="linked-list-url"></input>`; 
                     } 
                 },
-                { 
+                {
+                    orderable: false,
+                    searchable: false,
                     data: "openNewTab", 
                     title: "Open New Tab", 
                     width: "90px",
                     render: function(data :boolean, type, row : ILinkedList, meta : DataTables.CellMetaSettings){ 
                         return `
                         <input type="checkbox" ${data ? "checked" : "" } class="linked-list-openNewTab"></input>
-                        <button class="textButtonV1 red" version="textButtonV1" ts-action="delete">Delete</button>
+                        <button class="textButtonV1 tjs-btn-delete" version="textButtonV1" ts-action="delete">Delete</button>
                         `; 
                     } 
                 },
             ],
             data: account.LinkedList,
             searching: false,
-            info: false
+            info: false,
+            rowReorder: {
+                selector: "tr",
+                enable: true,
+                dataSrc: "Name"
+            }
         });
         
         let footer = $(popup).find(".footer").html(`
@@ -186,6 +197,17 @@ class Global{
         <button class="textButtonV1 green" version="textButtonV1" ts-action="add">Add</button>
         `);
         
+        datatable.on("row-reorder",function(e : Event,diff : any, edit : any){
+            for(let i = 0, ien = diff.length; i < ien; i++){
+                // get id row
+                let idQ = diff[i].node.id;
+                let idNewQ = idQ.replace("row_", "");
+                // get position
+                let position = diff[i].newPosition + 1;
+                //call funnction to update data
+                //updateOrder(idNewQ, position);
+            }
+        });
         table.on("change", "input", function(){
             let t = $(this);
             let data = datatable.row(t.closest("tr")).data() as ILinkedList;
@@ -193,7 +215,13 @@ class Global{
             else if(t.hasClass("linked-list-url")) data.Url = t.val() as string;
             else if(t.hasClass("linked-list-openNewTab")) data.openNewTab = this.prop("checked");
         });
-
+        table.on("click",'button[ts-action="delete"]', function(){
+            if(confirm("Delete?"))
+            {
+                datatable.row($(this).closest("tr")).remove();
+                datatable.draw();
+            }
+        });
         footer.find("button[ts-action='save']").on("click",function(){
             let linkedList : ILinkedList[] = [];
             datatable.rows().every(function(rowIdx, tableLoop, rowLoop){

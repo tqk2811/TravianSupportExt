@@ -14,7 +14,8 @@
   },
   "homepage": "https://github.com/tqk2811/TravianSupportExt#readme",
   "dependencies": {
-    "@types/datatables.net": "^1.10.21"
+    "@types/datatables.net": "^1.10.21",
+    "@types/datatables.net-rowreorder": "^1.1.3"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.6",

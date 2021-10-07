@@ -25,5 +25,4 @@ hs_err_pid*
 node_modules
 *.js
 ext/_metadata
-!ext/js/jquery-3.6.0.min.js
-!ext/js/jquery.dataTables.min.js
+!ext/libs/**

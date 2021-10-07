@@ -33,5 +33,5 @@
             ]
         }
     ],
-    "web_accessible_resources":[ "/res/*", "/js/*", "/css/*" ]
+    "web_accessible_resources":[ "/res/*", "/js/*", "/css/*", "/libs/*" ]
 }

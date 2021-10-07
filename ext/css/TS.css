@@ -9,8 +9,8 @@ td.unit.none{
 #sidebarBoxVillagelist .shortcutsEnabled li{
 	display: block!important;
 }
-.red{
-	background: rgb(211, 80, 80);
+.tjs-btn-delete{
+	background: rgb(241, 62, 62);
 }
 .iconAndNameWrapper{
 	padding: 0!important;

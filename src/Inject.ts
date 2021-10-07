@@ -11,9 +11,11 @@ function AddUriCss(uri: string){
     document.head.appendChild(s);
 }
 let scripts = [
+    "libs/js/jquery.dataTables.min.js",
+    "libs/js/rowReorder.dataTables.min.js",
+
     "js/Injects/Resources.js",
     "js/Injects/DataManagers/Datas.js",
-    "js/jquery.dataTables.min.js",
 
     'js/Injects/DataManagers/VillageData.js',
     'js/Injects/DataManagers/AccountData.js',
@@ -35,6 +37,7 @@ let scripts = [
     'js/Injects/Travian/Alliance.js',
 
     'js/Injects/App.js',
+    
 ];
 
 
@@ -44,7 +47,8 @@ let is_inject_githubio = chrome.runtime.sendMessage("inject_resource_githubio",f
     if(is_cb_inject_resource == true) path = "https://tqk2811.github.io/TravianSupportExt/";
 
     localStorage.setItem("TSRoot",path);
-    AddUriCss(path + "css/jquery.dataTables.min.css");
+    AddUriCss(path + "libs/css/jquery.dataTables.min.css");
+    AddUriCss(path + "libs/css/rowReorder.dataTables.min.css");
     AddUriCss(path + "css/TS.css");
     for(let i = 0; i < scripts.length; i++) AddUriScript(path + scripts[i]);
 });
