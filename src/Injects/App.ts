@@ -1,4 +1,10 @@
-$(function () {
+function Load() {
+    if($) $(App);
+    else setTimeout(Load, 100);
+}
+Load();
+
+function App(){
     if(!window.Travian) return;
     window.Instance = new CurrentInstance();
     
@@ -22,4 +28,4 @@ $(function () {
 
     TsTimerElement.Start();
     HotKeys.Init();
-});
+}

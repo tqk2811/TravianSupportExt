@@ -304,6 +304,7 @@ class Build{
                 account.CheckboxData["cb_market_noCrop"] = state;
                 account.Save();
             });
+            cb_noCrop.id = "cb_market_noCrop";
 
             let state_saveBigCelebration = account.CheckboxData["cb_market_saveBigCelebration"];
             if(state_saveBigCelebration == null) state_saveBigCelebration = false;
@@ -312,6 +313,7 @@ class Build{
                 account.CheckboxData["cb_market_saveBigCelebration"] = state;
                 account.Save();
             });
+            cb_saveBigCelebration.id = "cb_market_saveBigCelebration";
 
             div_left_market.appendChild(cb_noCrop);
             div_left_market.appendChild(cb_saveBigCelebration);
@@ -498,10 +500,19 @@ class Build{
                 let village_current = VillageData.GetCurrent();
 
                 //limit current
+                let isNoCrop = ($("#cb_market_noCrop").get()[0] as SaveCheckBoxElement).Checked;
+                let isSaveBigCele = ($("#cb_market_saveBigCelebration").get()[0] as SaveCheckBoxElement).Checked;
+                let bigcele = Resources.CelebrationResources["c_1"];
                 let balance_storage_current = village_current.Storage * village_current.BalanceMin / 100;
                 let balance_granary_current = village_current.Granary * village_current.BalanceMin / 100;
                 let max_can_send_current = new Resources(village_current.Resources)
-                    .Minus([balance_storage_current, balance_storage_current, balance_storage_current, balance_granary_current]);
+                    .Minus([
+                        Math.max(balance_storage_current, isSaveBigCele ? bigcele.Resources.Lumber : 0), 
+                        Math.max(balance_storage_current, isSaveBigCele ? bigcele.Resources.Claypit : 0),
+                        Math.max(balance_storage_current, isSaveBigCele ? bigcele.Resources.Iron : 0),
+                        Math.max(balance_granary_current, isSaveBigCele ? bigcele.Resources.Crop : 0, isNoCrop ? 9999999 : 0)
+                    ])
+                    .AlwaysPositive();
 
                 //limit target. If target not selected, limit is 10m per resource
                 let balance_Target_Max = village_target ? village_target.BalanceMax : 100;
@@ -511,7 +522,7 @@ class Build{
                 let balance_storage_target = storage_target * balance_Target_Max / 100;
                 let balance_granary_target = granary_target * balance_Target_Max / 100;
                 let max_can_received_target = new Resources([balance_storage_target,balance_storage_target,balance_storage_target,balance_granary_target])
-                    .Minus(resource_target);
+                    .Minus(resource_target).AlwaysPositive();
 
                 //limit merchant
                 let limit_merchant = Number($("#merchantCapacityValue").text()) * multiple;
@@ -527,7 +538,7 @@ class Build{
                     //balance current
                     let result = Build.Marketplace_BalanceCurrent(
                         max_can_send_current,
-                        new Resources([balance_storage_current, balance_storage_current, balance_storage_current, balance_granary_current]), 
+                        new Resources([village_current.Storage, village_current.Storage, village_current.Storage, village_current.Granary]), 
                         max_can_received_target,
                         res_send);
 
@@ -632,12 +643,10 @@ class Build{
         let result: Resources = new Resources([0,0,0,0]);
         while(total_send > 0)
         {
-            let maxkey = resource_current
-                .Minus(result)
-                .FixTarget(resource_canReceived_target)
-                .Divide(storage_current)
-                .MaxKey();
-
+            let minus = resource_current.Minus(result);
+            let fix_target = minus.FixTarget(resource_canReceived_target);
+            let divide = fix_target.Divide(storage_current);
+            let maxkey = divide.MaxKey();
             result[maxkey] += step;
             total_send -= step;
         }
@@ -655,11 +664,10 @@ class Build{
         let result: Resources = new Resources([0,0,0,0]);
         while(total_send > 0)//maybe infinite loop
         {
-            let minkey = resource_target
-                .Add(result)
-                //.FixCurrent(resource_maxCanSend_current)//need test more
-                .Divide(storage_target)
-                .MinKey();
+            let add = resource_target.Add(result);
+            //let fix_current = add.FixCurrent(resource_maxCanSend_current);
+            let divide = add.Divide(storage_target);
+            let minkey = divide.MinKey();
 
             result[minkey] += step;
             total_send -= step;

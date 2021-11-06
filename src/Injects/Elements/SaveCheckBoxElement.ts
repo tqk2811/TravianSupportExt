@@ -32,5 +32,8 @@ class SaveCheckBoxElement extends HTMLElement{
     private CheckedChange(){
         this._callback.call(this, this._input.checked);
     }
+    public get Checked() : boolean{
+        return this._input.checked;
+    }
 }
 customElements.define('save-checkbox', SaveCheckBoxElement);
