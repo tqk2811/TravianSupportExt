@@ -204,18 +204,34 @@ class Resources implements IResources{
             return new Resources([Math.max(0, a.Lumber), Math.max(0, a.Claypit), Math.max(0, a.Iron), Math.max(0, a.Crop)]);
     }
 
-
-    public Max() : number{
-        return Resources.Max(this);
+    public Max(a: IResources | TNumArray4): Resources{
+        if(Array.isArray(a))
+            return new Resources([
+                Math.max(a[0], this.Lumber),
+                Math.max(a[1], this.Claypit),
+                Math.max(a[2], this.Iron),
+                Math.max(a[3], this.Crop)
+            ]);
+        else
+            return new Resources([
+                Math.max(a.Lumber, this.Lumber),
+                Math.max(a.Claypit, this.Claypit),
+                Math.max(a.Iron, this.Iron),
+                Math.max(a.Crop, this.Crop)
+            ]);
     }
-    public static Max(a: IResources | TNumArray4): number{
+
+    public ItemMax() : number{
+        return Resources.ItemMax(this);
+    }
+    public static ItemMax(a: IResources | TNumArray4): number{
         if(Array.isArray(a))
             return Math.max(a[0], a[1], a[2], a[3]);
         else
             return Math.max(a.Lumber, a.Claypit, a.Iron, a.Crop);
     }
 
-    public MaxKey(): string {
+    public ItemMaxKey(): string {
         let keys = Object.keys( this );
         let key: string = keys[0];
         for(let i = 1; i < keys.length; i++)
@@ -226,17 +242,35 @@ class Resources implements IResources{
         return key;
     }
 
-    public Min() : number{
-        return Resources.Min(this);
+
+    public Min(a: IResources | TNumArray4): Resources{
+        if(Array.isArray(a))
+            return new Resources([
+                Math.min(a[0], this.Lumber),
+                Math.min(a[1], this.Claypit),
+                Math.min(a[2], this.Iron),
+                Math.min(a[3], this.Crop)
+            ]);
+        else
+            return new Resources([
+                Math.min(a.Lumber, this.Lumber),
+                Math.min(a.Claypit, this.Claypit),
+                Math.min(a.Iron, this.Iron),
+                Math.min(a.Crop, this.Crop)
+            ]);
     }
-    public static Min(a: IResources | TNumArray4): number{
+
+    public ItemMin() : number{
+        return Resources.ItemMin(this);
+    }
+    public static ItemMin(a: IResources | TNumArray4): number{
         if(Array.isArray(a))
             return Math.min(a[0], a[1], a[2], a[3]);
         else 
             return Math.min(a.Lumber, a.Claypit, a.Iron, a.Crop);
     }
 
-    public MinKey(): string {
+    public ItemMinKey(): string {
         let keys = Object.keys( this );
         let key: string = keys[0];
         for(let i = 1; i < keys.length; i++)
@@ -278,23 +312,23 @@ class Resources implements IResources{
             return a.Lumber + a.Claypit + a.Iron + a.Crop;
     }
 
-    public FixTarget(max_received_target: IResources): Resources{
-        return new Resources([
-            this.Lumber > max_received_target.Lumber ? 0 : this.Lumber,
-            this.Claypit > max_received_target.Claypit ? 0 : this.Claypit,
-            this.Iron > max_received_target.Iron ? 0 : this.Iron,
-            this.Crop > max_received_target.Crop ? 0 : this.Crop
-        ]);
-    }
+    // public FixTarget(max_received_target: IResources): Resources{
+    //     return new Resources([
+    //         this.Lumber > max_received_target.Lumber ? 0 : this.Lumber,
+    //         this.Claypit > max_received_target.Claypit ? 0 : this.Claypit,
+    //         this.Iron > max_received_target.Iron ? 0 : this.Iron,
+    //         this.Crop > max_received_target.Crop ? 0 : this.Crop
+    //     ]);
+    // }
 
-    public FixCurrent(max_send_current: IResources): Resources{
-        return new Resources([
-            this.Lumber > max_send_current.Lumber ? 999999 : this.Lumber,
-            this.Claypit > max_send_current.Claypit ? 999999 : this.Claypit,
-            this.Iron > max_send_current.Iron ? 999999 : this.Iron,
-            this.Crop > max_send_current.Crop ? 999999 : this.Crop
-        ]);
-    }
+    // public FixCurrent(max_send_current: IResources): Resources{
+    //     return new Resources([
+    //         this.Lumber > max_send_current.Lumber ? 999999 : this.Lumber,
+    //         this.Claypit > max_send_current.Claypit ? 999999 : this.Claypit,
+    //         this.Iron > max_send_current.Iron ? 999999 : this.Iron,
+    //         this.Crop > max_send_current.Crop ? 999999 : this.Crop
+    //     ]);
+    // }
 
 
     private static _ConstResources : TConstResources = {

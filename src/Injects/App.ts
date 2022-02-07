@@ -27,5 +27,6 @@ function App(){
 
 
     TsTimerElement.Start();
+    HotKeys.GlobalKey();
     HotKeys.Init();
 }

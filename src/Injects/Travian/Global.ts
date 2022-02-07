@@ -293,7 +293,7 @@ class Global{
         if(village.CelebrationEndTime && village.CelebrationEndTime > 0)
         {
             let timer = new TsTimerElement();
-            timer.NavigateUrl = `/build.php?gid=${Building.TownHall}`;
+            timer.NavigateUrl = `/build.php?gid=${Building.TownHall}&t=1`;
             timer.IsSound = false;
             timer.EndIime = village.CelebrationEndTime;
             timer.Init();

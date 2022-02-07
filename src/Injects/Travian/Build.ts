@@ -130,145 +130,12 @@ class Build{
                 datalist.appendChild(option);
             });
             document.body.appendChild(datalist);
-
-            //destination render
-            let func_Render_destinationSelect = function(){
-                $("#marketSend .destinationSelect").addClass("tjs_enterVillageName");                
-                $("#x2").on("change", Build.Marketplace_SelectChange);
-                $("#marketSend #enterVillageName")
-                    .attr("list", "tjs_villageDataList")
-                    .on("change", function(){
-                        let target_village_id = $(`#tjs_villageDataList option[value='${$(this).val()}']`).attr("village-id");
-                        if(target_village_id && target_village_id != '')
-                        {
-                            let village_target = VillageData.Load(Number(target_village_id));
-
-                            $(".tjs-slider.tjs-village-target .tjs-slider-input")
-                                .attr("village-id",village_target.VillageId.toString())
-                                .prop("disabled", false)
-                                .prop("value", village_target.BalanceMax.toString())
-                                .trigger("change");
-
-                            let timer = new TsTimerElement();
-                            timer.AdvText = "Updated %s ago.";
-                            timer.Counting = TimerCounting.Up;
-                            timer.EndIime = village_target.LastUpdateAt;
-                            timer.Init();
-                            $(".tjs-market-top .tjs-right .tjs-market-timer").html(timer);
-
-                            $(".tjs-market-top .tjs-right .tjs-market-resource").html(
-                                `
-                                <div class="inlineIconList resourceWrapper">
-                                    <div class="inlineIcon">
-                                        <i class="r1"></i>
-                                        <span class="value value">${village_target.Resources.Lumber}</span>
-                                    </div>
-                                    <div class="inlineIcon">
-                                        <i class="r2"></i>
-                                        <span class="value value">${village_target.Resources.Claypit}</span>
-                                    </div>
-                                    <div class="inlineIcon">
-                                        <i class="r3"></i>
-                                        <span class="value value">${village_target.Resources.Iron}</span>
-                                    </div>
-                                    <div class="inlineIcon">
-                                        <i class="r4"></i>
-                                        <span class="value value">${village_target.Resources.Crop}</span>
-                                    </div>
-                                </div>`
-                            );
-                        // <div class="inlineIcon tjs-resourceWrapper">
-                        //     <span class="value value">∑=${village_target.Resources.Lumber + village_target.Resources.Claypit + village_target.Resources.Iron + village_target.Resources.Crop}</span>
-                        // </div>
-                            $(".tjs-market-top .tjs-right .tjs-market-storage").html(
-                                `
-                                <div>
-                                    Warehouse: ${village_target.Storage}
-                                </div>
-                                <div>
-                                    Granary: ${village_target.Granary}
-                                </div>`);
-                        }
-                        else
-                        {
-                            $(".tjs-market-top .tjs-right .tjs-market-timer").html("");
-                            $(".tjs-market-top .tjs-right .tjs-market-resource").html("");
-                            $(".tjs-market-top .tjs-right .tjs-market-storage").html("");
-                            $(".tjs-slider.tjs-village-target .tjs-slider-input").prop("disabled", true);
-                        }
-                        Build.Marketplace_SelectChange();
-                    })
-                    .closest("tr")
-                    .append(`<td><img src="${window.TsResources.svg_close}" class="tjs-svg" onclick="$('#enterVillageName').val('')"></td>`);
-
-                //slider
-                $("#marketSend .destination").each(function(){
-                    let village_current = VillageData.GetCurrent();
-                    let div_current = document.createElement("div");
-                    div_current.className = "tjs-slider tjs-village-current";
-                    
-                    let slider_current_label = document.createElement("label");
-                    slider_current_label.className = "tjs-slider-label";
-                    slider_current_label.innerText = `${village_current.BalanceMin}%`;
-
-                    let slider_current = document.createElement("input");
-                    slider_current.type = "range";
-                    slider_current.min = "0";
-                    slider_current.max = "100";
-                    slider_current.value = village_current.BalanceMin.toString();
-                    slider_current.setAttribute("village-id", window.Instance.villageId.toString());
-                    slider_current.className = "tjs-slider-input";
-                    slider_current.onchange = function(){ 
-                        let village = VillageData.GetCurrent();
-                        village.BalanceMin = Number(slider_current.value);
-                        village.Save();
-                        Build.Marketplace_SelectChange();
-                    };
-                    slider_current.oninput = function(){ 
-                        slider_current_label.innerText = slider_current.value + "%";
-                    };
-
-                    div_current.appendChild(slider_current);
-                    div_current.appendChild(slider_current_label);
-
-
-
-                    let div_target = document.createElement("div");
-                    div_target.className = "tjs-slider tjs-village-target";
-
-                    let slider_target_label = document.createElement("label");
-                    slider_target_label.className = "tjs-slider-label";
-                    slider_target_label.innerText = "85%";
-
-                    let slider_target = document.createElement("input");
-                    slider_target.type = "range";
-                    slider_target.min = "0";
-                    slider_target.max = "100";
-                    slider_target.value = "85";
-                    slider_target.className = "tjs-slider-input";
-                    slider_target.disabled = true;
-                    slider_target.onchange = function(){
-                        let village = VillageData.Load(Number(slider_target.getAttribute("village-id")));
-                        village.BalanceMax = Number(slider_target.value);
-                        village.Save();
-                        Build.Marketplace_SelectChange();
-                    };
-                    slider_target.oninput = function(){ 
-                        slider_target_label.innerText = slider_target.value + "%";
-                    };
-                    
-
-                    div_target.appendChild(slider_target);
-                    div_target.appendChild(slider_target_label);
-
-                    $(this).append(div_current);
-                    $(this).append(div_target);
-                });
-            };
             
-            func_Render_destinationSelect();
-            $(document).on("DOMNodeInserted", "#marketSend .destinationSelect:not(.tjs_enterVillageName)", func_Render_destinationSelect);
-
+            Build.Marketplace_Render_destinationSelect();
+            $(document).on(
+                "DOMNodeInserted", 
+                "#marketSend .destinationSelect:not(.tjs_enterVillageName)", 
+                Build.Marketplace_Render_destinationSelect);
 
             $("#build .carry").remove();
 
@@ -393,6 +260,139 @@ class Build{
             //---------------------------------right---------------------------------
         });
     }
+
+
+    private static Marketplace_Render_destinationSelect() : void {
+        $("#marketSend .destinationSelect").addClass("tjs_enterVillageName");                
+        $("#x2").on("change", Build.Marketplace_SelectChange);
+        $("#marketSend #enterVillageName")
+            .attr("list", "tjs_villageDataList")
+            .on("change", function(){
+                let target_village_id = $(`#tjs_villageDataList option[value='${$(this).val()}']`).attr("village-id");
+                if(target_village_id && target_village_id != '')
+                {
+                    let village_target = VillageData.Load(Number(target_village_id));
+
+                    $(".tjs-slider.tjs-village-target .tjs-slider-input")
+                        .attr("village-id",village_target.VillageId.toString())
+                        .prop("disabled", false)
+                        .prop("value", village_target.BalanceMax.toString())
+                        .trigger("input");
+
+                    let timer = new TsTimerElement();
+                    timer.AdvText = "Updated %s ago.";
+                    timer.Counting = TimerCounting.Up;
+                    timer.EndIime = village_target.LastUpdateAt;
+                    timer.Init();
+                    $(".tjs-market-top .tjs-right .tjs-market-timer").html(timer);
+
+                    $(".tjs-market-top .tjs-right .tjs-market-resource").html(
+                        `
+                        <div class="inlineIconList resourceWrapper">
+                            <div class="inlineIcon">
+                                <i class="r1"></i>
+                                <span class="value value">${village_target.Resources.Lumber}</span>
+                            </div>
+                            <div class="inlineIcon">
+                                <i class="r2"></i>
+                                <span class="value value">${village_target.Resources.Claypit}</span>
+                            </div>
+                            <div class="inlineIcon">
+                                <i class="r3"></i>
+                                <span class="value value">${village_target.Resources.Iron}</span>
+                            </div>
+                            <div class="inlineIcon">
+                                <i class="r4"></i>
+                                <span class="value value">${village_target.Resources.Crop}</span>
+                            </div>
+                        </div>`
+                    );
+                // <div class="inlineIcon tjs-resourceWrapper">
+                //     <span class="value value">∑=${village_target.Resources.Lumber + village_target.Resources.Claypit + village_target.Resources.Iron + village_target.Resources.Crop}</span>
+                // </div>
+                    $(".tjs-market-top .tjs-right .tjs-market-storage").html(
+                        `
+                        <div>
+                            Warehouse: ${village_target.Storage}
+                        </div>
+                        <div>
+                            Granary: ${village_target.Granary}
+                        </div>`);
+                }
+                else
+                {
+                    $(".tjs-market-top .tjs-right .tjs-market-timer").html("");
+                    $(".tjs-market-top .tjs-right .tjs-market-resource").html("");
+                    $(".tjs-market-top .tjs-right .tjs-market-storage").html("");
+                    $(".tjs-slider.tjs-village-target .tjs-slider-input").prop("disabled", true);
+                }
+                Build.Marketplace_SelectChange();
+            })
+            .closest("tr")
+            .append(`<td><img src="${window.TsResources.svg_close}" class="tjs-svg" onclick="$('#enterVillageName').val('').trigger('change');"></td>`);
+
+        //slider
+        $("#marketSend .destination").each(function(){
+            let village_current = VillageData.GetCurrent();
+            let div_current = document.createElement("div");
+            div_current.className = "tjs-slider tjs-village-current";
+            
+            let slider_current_label = document.createElement("label");
+            slider_current_label.className = "tjs-slider-label";
+            slider_current_label.innerText = `${village_current.BalanceMin}%`;
+
+            let slider_current = document.createElement("input");
+            slider_current.type = "range";
+            slider_current.min = "0";
+            slider_current.max = "100";
+            slider_current.value = village_current.BalanceMin.toString();
+            slider_current.setAttribute("village-id", window.Instance.villageId.toString());
+            slider_current.className = "tjs-slider-input";
+            slider_current.onchange = function(){ 
+                let village = VillageData.GetCurrent();
+                village.BalanceMin = Number(slider_current.value);
+                village.Save();
+                Build.Marketplace_SelectChange();
+            };
+            slider_current.oninput = function(){ 
+                slider_current_label.innerText = slider_current.value + "%";
+            };
+
+            div_current.appendChild(slider_current);
+            div_current.appendChild(slider_current_label);
+
+            let div_target = document.createElement("div");
+            div_target.className = "tjs-slider tjs-village-target";
+
+            let slider_target_label = document.createElement("label");
+            slider_target_label.className = "tjs-slider-label";
+            slider_target_label.innerText = "85%";
+
+            let slider_target = document.createElement("input");
+            slider_target.type = "range";
+            slider_target.min = "0";
+            slider_target.max = "100";
+            slider_target.value = "85";
+            slider_target.className = "tjs-slider-input";
+            slider_target.disabled = true;
+            slider_target.onchange = function(){
+                let village = VillageData.Load(Number(slider_target.getAttribute("village-id")));
+                village.BalanceMax = Number(slider_target.value);
+                village.Save();
+                Build.Marketplace_SelectChange();
+            };
+            slider_target.oninput = function(){ 
+                slider_target_label.innerText = slider_target.value + "%";
+            };
+            
+            div_target.appendChild(slider_target);
+            div_target.appendChild(slider_target_label);
+
+            $(this).append(div_current);
+            $(this).append(div_target);
+        });
+    }
+
     private static Marketplace_SelectChange() : void{
         let type =  $("#tjs-market-type").val();
         let input_number = $("#tjs-market-number");
@@ -459,17 +459,15 @@ class Build{
                     .Minus([current_save_storage, current_save_storage, current_save_storage, current_save_granary])
                     .AlwaysPositive();
 
-                let min_canSend : number = current_balance.Add(resources_target).Divide(troop.Resources).Min().floor();
-
                 //max market can send
-                let multiple = Build.Marketplace_GetRunTwice();
-                let max_market : number = Math.floor(Number($("#merchantCapacityValue").text()) * multiple / Resources.Total(troop.Resources));
-                
-                //can received target
-                let max_target : number = new Resources([storage_target,storage_target,storage_target,granary_target]).Divide(troop.Resources).Min().floor();
+                let multiple : number = Build.Marketplace_GetRunTwice();
+                let min : number = Build.Marketplace_BalanceTroopTarget(
+                    new Resources(resources_target),
+                    new Resources([storage_target,storage_target,storage_target,granary_target]),
+                    current_balance,
+                    new Resources(troop.Resources),
+                    Number($("#merchantCapacityValue").text()) * multiple);
 
-                console.log(`min_canSend:${min_canSend}, max_market:${max_market}, max_target:${max_target}`);
-                let min : number = Math.min(min_canSend, max_market, max_target);
                 if(min < 0) min = 0;
                 input_number.prop("max", min);
                 if(Number(input_number.val()) > min) input_number.val(min);
@@ -478,6 +476,7 @@ class Build{
             break;
         }
     }
+
     private static Marketplace_Balance : number = 100;
     private static Marketplace_NumChange() : void{
         console.log("Marketplace_NumChange");
@@ -637,17 +636,43 @@ class Build{
         storage_current: Resources, 
         resource_canReceived_target: Resources,//maybe full target
         total_send: number, 
-        step: number = 2 * 3 * 5 //2 * 3 for easy divide 
+        step: number = 5
     ) : Resources
     {
-        let result: Resources = new Resources([0,0,0,0]);
-        while(total_send > 0)
+        let res_can_send = resource_current.Min(resource_canReceived_target);
+        let result : Resources = new Resources([0,0,0,0]);
+        let ignore : Resources = new Resources([step,step,step,step]);
+        let keys_check: string[] = ["Lumber", "Claypit", "Iron", "Crop"];
+        while(true)//total_send >= step
         {
-            let minus = resource_current.Minus(result);
-            let fix_target = minus.FixTarget(resource_canReceived_target);
-            let divide = fix_target.Divide(storage_current);
-            let maxkey = divide.MaxKey();
-            result[maxkey] += step;
+            //balance by percent
+            //maybe full some resource in target -> ignore
+            let avalable_current = res_can_send.Minus(result);
+            let freespace_target = resource_canReceived_target.Minus(result);
+
+            let ignore_current = avalable_current.Minus(ignore);
+            for(let i = 0; i < keys_check.length; i++)
+            {
+                if(ignore_current[keys_check[i]] < 0) keys_check = keys_check.splice(i, 1);
+            }
+            
+            let ignore_target = freespace_target.Minus(ignore);
+            for(let i = 0; i < keys_check.length; i++)
+            {
+                if(ignore_target[keys_check[i]] < 0) keys_check = keys_check.splice(i, 1);
+            }
+
+            if(keys_check.length == 0) break;
+            if(total_send < step) break;
+
+            let divide = avalable_current.Divide(storage_current);
+            let max_key: string = keys_check[0];
+            for(let i = 1; i < keys_check.length; i++)
+            {
+                if(divide[keys_check[i]] > divide[max_key])
+                    max_key = keys_check[i];
+            }
+            result[max_key] += step;
             total_send -= step;
         }
         return result;
@@ -658,20 +683,50 @@ class Build{
         storage_target: Resources,
         resource_maxCanSend_current: Resources,//maybe not enough current
         total_send: number, 
-        step: number = 2 * 3 * 5 //2 * 3 for easy divide 
+        step: number = 5
     ) : Resources
     {
+        let res_need_target = storage_target.Minus(resource_target);
+        let res_can_send = resource_maxCanSend_current.Min(res_need_target);
         let result: Resources = new Resources([0,0,0,0]);
-        while(total_send > 0)//maybe infinite loop
+        while(total_send >= step)//maybe infinite loop
         {
-            let add = resource_target.Add(result);
-            //let fix_current = add.FixCurrent(resource_maxCanSend_current);
-            let divide = add.Divide(storage_target);
-            let minkey = divide.MinKey();
-
-            result[minkey] += step;
+            let minus = res_can_send.Minus(result);
+            let divide = minus.Divide(storage_target);
+            let maxkey = divide.ItemMaxKey();
+            result[maxkey] += step;
             total_send -= step;
         }
         return result;
+    }
+
+    private static Marketplace_BalanceTroopTarget(
+        resource_target: Resources, 
+        storage_target: Resources,
+        resource_maxCanSend_current: Resources,
+        troop_res: Resources,
+        total_send: number
+    ) : number
+    {
+        resource_target = resource_target.Min(storage_target);
+        let max_target : number = resource_target.Divide(troop_res).ItemMin().floor();
+        let res_send : Resources = troop_res.Multiple(max_target).Minus(resource_target).AlwaysPositive();
+        let res_send_total : number = res_send.Total();
+        let troop_res_total = troop_res.Total();
+        while(true)
+        {
+            max_target++;
+            let troop_need : Resources =  troop_res.Multiple(max_target);
+            res_send = troop_need.Minus(resource_target).AlwaysPositive();
+            res_send_total = res_send.Total();
+
+            //limit storage target
+            if(storage_target.Minus(resource_target.Add(res_send)).ItemMin() < 0) break;
+            //merchant capacity
+            if(total_send < res_send_total + troop_res_total) break;
+            //limit current village
+            if(resource_maxCanSend_current.Minus(res_send).ItemMin() < 0) break;
+        }
+        return max_target - 1;
     }
 }
