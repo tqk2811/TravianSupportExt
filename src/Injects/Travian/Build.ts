@@ -686,15 +686,40 @@ class Build{
         step: number = 5
     ) : Resources
     {
-        let res_need_target = storage_target.Minus(resource_target);
-        let res_can_send = resource_maxCanSend_current.Min(res_need_target);
+        let resource_canReceived_target = storage_target.Minus(resource_target);
+        let res_can_send = resource_maxCanSend_current.Min(resource_canReceived_target);
+
         let result: Resources = new Resources([0,0,0,0]);
-        while(total_send >= step)//maybe infinite loop
+        let ignore : Resources = new Resources([step,step,step,step]);
+        let keys_check: string[] = ["Lumber", "Claypit", "Iron", "Crop"];
+        while(true)
         {
-            let minus = res_can_send.Minus(result);
-            let divide = minus.Divide(storage_target);
-            let maxkey = divide.ItemMaxKey();
-            result[maxkey] += step;
+            let avalable_current = res_can_send.Minus(result);
+            let freespace_target = resource_canReceived_target.Minus(result);
+
+            let ignore_current = avalable_current.Minus(ignore);
+            for(let i = 0; i < keys_check.length; i++)
+            {
+                if(ignore_current[keys_check[i]] < 0) keys_check = keys_check.splice(i, 1);
+            }
+            
+            let ignore_target = freespace_target.Minus(ignore);
+            for(let i = 0; i < keys_check.length; i++)
+            {
+                if(ignore_target[keys_check[i]] < 0) keys_check = keys_check.splice(i, 1);
+            }
+
+            if(keys_check.length == 0) break;
+            if(total_send < step) break;
+
+            let divide = resource_target.Add(result).Divide(storage_target);
+            let min_key: string = keys_check[0];
+            for(let i = 1; i < keys_check.length; i++)
+            {
+                if(divide[keys_check[i]] < divide[min_key])
+                    min_key = keys_check[i];
+            }
+            result[min_key] += step;
             total_send -= step;
         }
         return result;
