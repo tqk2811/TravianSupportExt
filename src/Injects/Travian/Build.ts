@@ -13,7 +13,10 @@ class Build{
                     Build.TrainTimer();
                     break;
                 }
-
+                case Building.RallyPoint:{
+                    Build.RallyPoint();
+                    break;
+                }
                 case Building.Marketplace:{
                     Build.Marketplace();
                     break;
@@ -110,6 +113,24 @@ class Build{
     }
 //---------------------------troop training---------------------------------
 
+    private static RallyPoint() : void{
+        let href = $(window.Instance.e_ActiveTabMain)?.attr("href");
+        if(href != undefined){
+            if(href.indexOf("tt=2") != -1){//tab sendtroops
+                let datalist = document.createElement("datalist");
+                datalist.id = "tjs_villageDataList";
+                window.Instance.e_Villages.forEach(function(val: Element){
+                    if($(val).hasClass("active")) return;
+                    let option = document.createElement("option");
+                    option.value = $(val).find(".name").text();
+                    option.setAttribute("village-id", $(val).attr("data-did"));
+                    datalist.appendChild(option);
+                });
+                document.body.appendChild(datalist);
+                $(".gid16 #enterVillageName").attr("list", "tjs_villageDataList");
+            }
+        }
+    }
 
     private static Marketplace() :void {
         Build.Marketplace_SendResourcesTab();
