@@ -674,13 +674,13 @@ class Build{
             let ignore_current = avalable_current.Minus(ignore);
             for(let i = 0; i < keys_check.length; i++)
             {
-                if(ignore_current[keys_check[i]] < 0) keys_check = keys_check.splice(i, 1);
+                if(ignore_current[keys_check[i]] < 0) keys_check.splice(i, 1);
             }
             
             let ignore_target = freespace_target.Minus(ignore);
             for(let i = 0; i < keys_check.length; i++)
             {
-                if(ignore_target[keys_check[i]] < 0) keys_check = keys_check.splice(i, 1);
+                if(ignore_target[keys_check[i]] < 0) keys_check.splice(i, 1);
             }
 
             if(keys_check.length == 0) break;
@@ -721,13 +721,13 @@ class Build{
             let ignore_current = avalable_current.Minus(ignore);
             for(let i = 0; i < keys_check.length; i++)
             {
-                if(ignore_current[keys_check[i]] < 0) keys_check = keys_check.splice(i, 1);
+                if(ignore_current[keys_check[i]] < 0) keys_check.splice(i, 1);
             }
             
             let ignore_target = freespace_target.Minus(ignore);
             for(let i = 0; i < keys_check.length; i++)
             {
-                if(ignore_target[keys_check[i]] < 0) keys_check = keys_check.splice(i, 1);
+                if(ignore_target[keys_check[i]] < 0) keys_check.splice(i, 1);
             }
 
             if(keys_check.length == 0) break;
