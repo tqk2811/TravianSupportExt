@@ -1,7 +1,10 @@
-function AddUriScript(uri: string){
-    let s = document.createElement('script');
-    s.setAttribute("src",uri);
-    document.head.appendChild(s);
+function AddUriScript(uri: string) : Promise<void>{
+    return new Promise<void>((resolve, reject) => {
+        let s = document.createElement('script');
+        s.setAttribute("src",uri);
+        s.onload = () => resolve();
+        document.head.appendChild(s);
+    });
 }
 function AddUriCss(uri: string){
     let s = document.createElement('link');
@@ -39,10 +42,19 @@ let scripts = [
     'js/Injects/App.js',
     
 ];
+let csss = [
+    "libs/css/jquery.dataTables.min.css",
+    "libs/css/rowReorder.dataTables.min.css",
+    "css/TS.css"
+]
 
-let path = chrome.runtime.getURL("");
-localStorage.setItem("TSRoot",path);
-AddUriCss(path + "libs/css/jquery.dataTables.min.css");
-AddUriCss(path + "libs/css/rowReorder.dataTables.min.css");
-AddUriCss(path + "css/TS.css");
-for(let i = 0; i < scripts.length; i++) AddUriScript(path + scripts[i]);
+async function Inject() {
+    let path = chrome.runtime.getURL("");
+    localStorage.setItem("TSRoot",path);
+    for(let i = 0; i < csss.length; i++) AddUriCss(path + csss[i]);
+    for(let i = 0; i < scripts.length; i++) 
+    {
+        await AddUriScript(path + scripts[i]);
+    }
+}
+Inject();
