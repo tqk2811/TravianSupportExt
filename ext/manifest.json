@@ -9,6 +9,7 @@
         "webRequestBlocking",
         "activeTab",
         "tabs",
+        "https://*.travian.com/*",
         "*://*.consensu.org/*"
     ],
     "browser_action" :{},

@@ -1,5 +1,5 @@
-chrome.webRequest.onBeforeRequest.addListener(
-    function(details : chrome.webRequest.WebRequestBodyDetails) : chrome.webRequest.BlockingResponse {
+chrome.webRequest.onBeforeSendHeaders.addListener(
+    function(details : chrome.webRequest.WebRequestHeadersDetails) : chrome.webRequest.BlockingResponse {
         let resut : chrome.webRequest.BlockingResponse = {
             cancel: true,
         };
