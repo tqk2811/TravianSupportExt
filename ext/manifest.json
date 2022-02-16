@@ -3,25 +3,19 @@
     "name": "Travian Support",
     "description": "Travian Support",
     "version": "0.0.1",
-    "declarative_net_request": {
-        "rule_resources": [{
-          "id": "ruleset_1",
-          "enabled": true,
-          "path": "blockRule.json"
-        }]
-    },
     "content_security_policy": "script-src 'self' https://tqk2811.github.io; object-src 'self'",
     "permissions": [
-        "declarativeNetRequest",
+        "webRequest",
+        "webRequestBlocking",
         "activeTab",
-        "tabs"
+        "tabs",
+        "*://*.consensu.org/*"
     ],
     "browser_action" :{},
     "background": {
         "scripts": ["/js/BackGround.js"],
         "persistent": true
     },
-    "options_page": "options.html",
     "content_scripts" : [
         {
             "run_at" : "document_idle",
