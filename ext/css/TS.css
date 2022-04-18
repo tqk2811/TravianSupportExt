@@ -241,7 +241,17 @@ pop-up .footer{
 	height: 32px;
 	z-index: 0;
 }
-        
+
+#raidList .villageWrapper .dropContainer .raidList .raidListContent>form{
+	grid-template-rows: auto auto;
+    display: grid;
+}
+#raidList .villageWrapper .dropContainer .raidList .raidListContent>form>table{
+	grid-row-start: 2;
+}
+#raidList .villageWrapper .dropContainer .raidList .raidListContent>form>.buttonWrapper{
+	grid-row-start: 1;
+}
 /* this.attachShadow({mode: 'open'});
 this.shadowRoot.innerHTML = `
 	<style>
