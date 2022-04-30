@@ -109,9 +109,17 @@ ts-village-row-adv span{
 	width : 150px;
 }
 .tjs-market-top .tjs-left input{
-	width : 50px;
+	width : 65px;
 }
-
+.tjs-market-top .tjs-left .tjs-market-merchant-plus-minus{
+	grid-row-start: 3;	
+}
+.tjs-market-top .tjs-left .tjs-market-merchant-plus-minus a{
+	font-size: 23px;
+    line-height: 16px;
+    margin: 3px;
+    margin-top: 3px;
+}
 .tjs-market-top .tjs-right{
 	height: 54px;
 	grid-template-rows: auto auto auto;

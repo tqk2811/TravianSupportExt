@@ -254,16 +254,51 @@ class Build{
             input_number.onchange =  Build.Marketplace_NumChange;
             
             //label
-            let label_number_max = document.createElement("label");
+            let label_number_max = document.createElement("a");
             label_number_max.id = "tjs-market-number-max";
             label_number_max.innerText = "/0";
+            label_number_max.href = "#";
             label_number_max.onclick = function(){
                 $("#tjs-market-number").val($("#tjs-market-number").attr("max"));
                 Build.Marketplace_NumChange();
             };
 
+            let insert_div = document.createElement("div");
+            insert_div.className = "tjs-market-merchant-plus-minus";
+            let plus = document.createElement("a");
+            plus.href = "#";
+            plus.innerText = "+";
+            plus.className = "tjs-market-plus";
+            plus.onclick = function(){
+                let input_number = $("#tjs-market-number");
+                if(input_number.val() != "b_0" || input_number.val() == "b_1")
+                    return;
+                let num = Number($("#tjs-market-number").val());
+                let merchant_carry = Number($("#addRessourcesLink1").text());
+                $("#tjs-market-number").val(num + merchant_carry);
+                Build.Marketplace_NumChange();
+            }
+            let minus = document.createElement("a");
+            minus.href = "#";
+            minus.className = "tjs-market-minus";
+            minus.innerText = "-";
+            minus.onclick = function(){
+                let input_number = $("#tjs-market-number");
+                if(input_number.val() != "b_0" || input_number.val() == "b_1")
+                    return;
+                let num = Number($("#tjs-market-number").val());
+                let merchant_carry = Number($("#addRessourcesLink1").text());
+                $("#tjs-market-number").val(Math.max(num + merchant_carry,0));
+                Build.Marketplace_NumChange();
+            };
+            insert_div.append(plus);
+            insert_div.append(minus);
+
             div_left_market.appendChild(input_number);
             div_left_market.appendChild(label_number_max);
+            div_left_market.appendChild(insert_div);
+            
+            
             //---------------------------------left---------------------------------
 
 
@@ -498,7 +533,7 @@ class Build{
         }
     }
 
-    private static Marketplace_Balance : number = 100;
+    private static Marketplace_Balance : number = 1;
     private static Marketplace_NumChange() : void{
         console.log("Marketplace_NumChange");
 
