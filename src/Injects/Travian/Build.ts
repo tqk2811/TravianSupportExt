@@ -288,7 +288,7 @@ class Build{
                     return;
                 let num = Number($("#tjs-market-number").val());
                 let merchant_carry = Number($("#addRessourcesLink1").text());
-                $("#tjs-market-number").val(Math.max(num + merchant_carry,0));
+                $("#tjs-market-number").val(Math.max(num - merchant_carry,0));
                 Build.Marketplace_NumChange();
             };
             insert_div.append(plus);
