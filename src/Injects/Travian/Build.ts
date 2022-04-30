@@ -270,8 +270,8 @@ class Build{
             plus.innerText = "+";
             plus.className = "tjs-market-plus";
             plus.onclick = function(){
-                let input_number = $("#tjs-market-number");
-                if(input_number.val() != "b_0" || input_number.val() == "b_1")
+                let type =  $("#tjs-market-type").val();
+                if(type != "b_0" && type != "b_1")
                     return;
                 let num = Number($("#tjs-market-number").val());
                 let merchant_carry = Number($("#addRessourcesLink1").text());
@@ -283,8 +283,8 @@ class Build{
             minus.className = "tjs-market-minus";
             minus.innerText = "-";
             minus.onclick = function(){
-                let input_number = $("#tjs-market-number");
-                if(input_number.val() != "b_0" || input_number.val() == "b_1")
+                let type =  $("#tjs-market-type").val();
+                if(type != "b_0" && type != "b_1")
                     return;
                 let num = Number($("#tjs-market-number").val());
                 let merchant_carry = Number($("#addRessourcesLink1").text());
