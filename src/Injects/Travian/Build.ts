@@ -269,7 +269,8 @@ class Build{
             plus.href = "#";
             plus.innerText = "+";
             plus.className = "tjs-market-plus";
-            plus.onclick = function(){
+            plus.onclick = function(e){
+                e.preventDefault();
                 let type =  $("#tjs-market-type").val();
                 if(type != "b_0" && type != "b_1")
                     return;
@@ -282,7 +283,8 @@ class Build{
             minus.href = "#";
             minus.className = "tjs-market-minus";
             minus.innerText = "-";
-            minus.onclick = function(){
+            minus.onclick = function(e){
+                e.preventDefault();
                 let type =  $("#tjs-market-type").val();
                 if(type != "b_0" && type != "b_1")
                     return;
