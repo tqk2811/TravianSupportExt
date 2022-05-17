@@ -359,6 +359,7 @@ class Global{
             timer.NavigateUrl = `/build.php?newdid=${village.VillageId}&gid=${Building.TownHall}`;
             timer.IsSound = false;
             timer.EndIime = village.CelebrationEndTime;
+            timer.Color = "Blue";
             timer.Init();
             elements.push(timer);
         }
