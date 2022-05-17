@@ -334,8 +334,8 @@ class Resources implements IResources{
     private static _ConstResources : TConstResources = {
         "c_0" : { Resources: Resources.FromNumArray4([6400,6650,5940,1340]), RunTwice : 1 },
         "c_1" : { Resources: Resources.FromNumArray4([29700,33250,32000,6700]), RunTwice : 1 },
-        "c_2" : { Resources: Resources.FromNumArray4([14850,16625,16000,3350]), RunTwice : 1 },
-        "c_3" : { Resources: Resources.FromNumArray4([9900,11084,10667,2234]), RunTwice : 1 },
+        "c_2" : { Resources: Resources.FromNumArray4([14850,16625,16000,3350]), RunTwice : 2 },
+        "c_3" : { Resources: Resources.FromNumArray4([9900,11084,10667,2234]), RunTwice : 3 },
     }
 
     public static get CelebrationResources() : TConstResources { return Resources._ConstResources; }
