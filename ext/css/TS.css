@@ -27,6 +27,7 @@ td.unit.none{
 .Tjs_troop_train .Tjs_troop_train_group{
 	float: left;
 	width:25%;
+	background-color: rgba(128, 128, 128, 0.349);
 }
 .Tjs_troop_train .Tjs_troop_train_name{
 	float: left; 

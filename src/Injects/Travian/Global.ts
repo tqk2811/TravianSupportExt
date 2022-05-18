@@ -334,7 +334,9 @@ class Global{
             let val = village.TroopTrains[key];
             let building: Building = Number(key);
 
-            if(val.IsEnable)
+            if(val.IsEnable && 
+                building != Building.Smithy && 
+                building != Building.Hospital)
             {
                 let timer = new TsTimerElement();
                 timer.IsSound = true;
