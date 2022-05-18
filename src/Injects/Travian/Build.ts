@@ -264,7 +264,8 @@ class Build{
             label_number_max.id = "tjs-market-number-max";
             label_number_max.innerText = "/0";
             label_number_max.href = "#";
-            label_number_max.onclick = function(){
+            label_number_max.onclick = function(e){
+                e.preventDefault();
                 $("#tjs-market-number").val($("#tjs-market-number").attr("max"));
                 Build.Marketplace_NumChange();
             };
