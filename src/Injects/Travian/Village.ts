@@ -14,7 +14,7 @@ class Village {
                             $("#ressources tr").each(function (index, element) {
                                 let row = $(element);
                                 let vil = row.find("td.vil a").first();
-                                if (vil) {
+                                if (vil.length > 0) {
                                     let id = Number(vil.attr("href").getParameterByName("newdid"));
                                     let lum = Number(row.find("td.lum").text().trim().getASCII().replaceAll(",", "").replaceAll(".", ""));
                                     let clay = Number(row.find("td.clay").text().trim().getASCII().replaceAll(",", "").replaceAll(".", ""));
