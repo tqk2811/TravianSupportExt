@@ -7,7 +7,7 @@ class Village {
                 switch (href) {
                     case "/village/statistics/overview":
                         {
-
+                            break;
                         }
                     case "/village/statistics/resources":
                         {
@@ -26,10 +26,11 @@ class Village {
                                     village.Save();
                                 }
                             });
+                            break;
                         }
                     case "/village/statistics/warehouse":
                         {
-
+                            break;
                         }
                     case "/village/statistics/culturepoints":
                         {
@@ -42,10 +43,11 @@ class Village {
                                 village.CelebrationEndTime = Date.now() + (time * 1000);
                                 village.Save();
                             });
+                            break;
                         }
                     case "/village/statistics/troops":
                         {
-
+                            break;
                         }
                 }
             }
@@ -62,7 +64,12 @@ class Village {
                     case "/village/statistics/overview":
                         {
                             Village.NumCountAtt("att1", "color:red;");
-                            Village.NumCountAtt("att3", "color:#E6E6FA");
+                            Village.NumCountAtt("att3", "color:#7312a3");
+                            Village.ChangeNavigate("att1", "1", "1");
+                            Village.ChangeNavigate("att3", "1", "1");
+                            Village.ChangeNavigate("def1", "1", "2");
+                            Village.ChangeNavigate("def2", "2", "5");
+                            Village.ChangeNavigate("def3", "1", "3");
                             $(".unit").each(function (index, element) {
                                 let e = $(element);
                                 let alt = e.attr("alt");
@@ -76,19 +83,19 @@ class Village {
                         }
                     case "/village/statistics/resources":
                         {
-    
+
                         }
                     case "/village/statistics/warehouse":
                         {
-    
+
                         }
                     case "/village/statistics/culturepoints":
                         {
-    
+
                         }
                     case "/village/statistics/troops":
                         {
-    
+
                         }
                 }
             }
@@ -105,6 +112,18 @@ class Village {
                 e_numattack.setAttribute("style", color);
                 e_numattack.innerText = "( " + count + " ) ";
                 e.get()[0].insertAdjacentElement("beforebegin", e_numattack);
+            }
+        });
+    }
+
+    private static ChangeNavigate(className: string, filter: string, subfilters: string) : void{
+        $("." + className).each(function () {
+            let e = $(this);
+            let parent = e.parent();
+            let href = parent.attr("href");
+            if (href) {
+                let newdid = href.getParameterByName("newdid");
+                parent.attr("href",`/build.php?newdid=${newdid}&gid=16&tt=1&filter=${filter}&subfilters=${subfilters}`);
             }
         });
     }
