@@ -162,7 +162,12 @@ class Build{
             $(document).on(
                 "DOMNodeInserted", 
                 "#marketSend .destinationSelect:not(.tjs_enterVillageName)", 
-                Build.Marketplace_Render_destinationSelect);
+                ()=> {
+                    let village = VillageData.GetCurrent();
+                    village.Read();
+                    village.Save();
+                    Build.Marketplace_Render_destinationSelect();
+                });
 
             $("#build .carry").remove();
 
