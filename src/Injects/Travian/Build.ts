@@ -120,6 +120,7 @@ class Build{
 //---------------------------troop training---------------------------------
 
     private static RallyPoint() : void{
+        Build.RallyPoint_RaidListHightlight();
         let href = $(window.Instance.e_ActiveTabMain)?.attr("href");
         if(href != undefined){
             if(href.indexOf("tt=2") != -1){//tab sendtroops
@@ -137,6 +138,11 @@ class Build{
             }
         }
     }
+    private static RallyPoint_RaidListHightlight() : void{
+        $(`#raidList .villageWrapper[data-did='${window.Instance.villageId}']`)
+            .addClass("tjs-raidlist-highlight");
+    }
+
 
     private static Marketplace() :void {
         Build.Marketplace_SendResourcesTab();
