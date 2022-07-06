@@ -7,7 +7,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     },
     {
         types: ["script"],
-        urls: ["*://*.consensu.org/*"]
+        urls: ["*://*.consensu.org/*", "*://*.consentmanager.net/*"]
     },
     ["blocking"]
 );
