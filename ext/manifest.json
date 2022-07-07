@@ -10,8 +10,7 @@
         "activeTab",
         "tabs",
         "https://*.travian.com/*",
-        "*://*.consensu.org/*",
-        "*://*.consentmanager.net/*"
+        "*://*.consensu.org/*"
     ],
     "browser_action" :{},
     "background": {
