@@ -617,7 +617,7 @@ class Build{
                         max_can_received_target,
                         res_send);
 
-                    Build.Marketplace_SetResource(result.Divide(multiple).round());
+                    Build.Marketplace_SetResource(result.Divide(multiple).floor());
                 }
                 else if(village_target)//ignore balance target when not select target village
                 {
@@ -628,7 +628,7 @@ class Build{
                         max_can_send_current,
                         res_send);
 
-                    Build.Marketplace_SetResource(result.Divide(multiple).round());
+                    Build.Marketplace_SetResource(result.Divide(multiple).floor());
                 }
             }
             break;
