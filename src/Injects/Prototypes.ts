@@ -1,9 +1,8 @@
-interface TravianTooltip{
-    title:string;
-    text:string;
+interface Tippy{
+    popper: HTMLElement;
 }
 interface HTMLElement{
-    _travianTooltip: TravianTooltip;
+    _tippy: Tippy;
 }
 interface Object{
     FirstKey(): string;

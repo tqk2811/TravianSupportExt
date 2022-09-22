@@ -287,7 +287,7 @@ class Global{
 
     private static Villagelist_RenderCulture (): void{
         let slots = $(".expansionSlotInfo .boxTitle .slots").text().getASCII().match(/\d+\/\d+$/);
-        let tooltip_text = $(".expansionSlotInfo").get()[0]._travianTooltip.text.getASCII().match(/\d+\/\d+$/);
+        let tooltip_text = $(".expansionSlotInfo").get()[0]._tippy.popper.outerText.getASCII().match(/\d+\/\d+$/);
         $(".expansionSlotInfo .boxTitle").html(slots + " (" + tooltip_text + ")");
         let village = VillageData.GetCurrent();
         if(village.CelebrationEndTime && village.CelebrationEndTime > 0)
