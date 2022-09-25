@@ -416,11 +416,17 @@ public static Init_ResourceWrapper() : void{
         total += Number(vals[3].innerText);
         $(this)
             .addClass("tjs-resourceWrapper")
-            .append(`<div class="inlineIcon resource tjs-resourceWrapper"><span class="value value">∑ = ${total}</span></div>`);
+            .append(`<div class="inlineIcon resource tjs-resourceWrapper"><span class="value value" style="color: red">∑ = ${total}</span></div>`);
     }
 
     $(".resourceWrapper").each(func);
-    $(document).on("DOMNodeInserted", ".tip-contents .resourceWrapper:not(.tjs-resourceWrapper)", func);
+    $(document).on(
+        "DOMNodeInserted", 
+        "div[data-tippy-root]",
+        function(){
+            $(".resourceWrapper:not(.tjs-resourceWrapper)").each(func);
+        }
+    );
 }
 
 
