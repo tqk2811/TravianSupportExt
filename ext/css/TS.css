@@ -280,3 +280,6 @@ pop-up .footer{
 #heroV2 .heroItemTooltip{
 	z-index: 999999;
 }
+#content.heroV2.heroV2Inventory{
+	min-height: auto !important;
+}
