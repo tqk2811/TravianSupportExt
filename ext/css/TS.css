@@ -266,3 +266,17 @@ pop-up .footer{
 .villageWrapper.tjs-raidlist-highlight{
 	background-color: black;
 }
+
+#heroV2 .currentHeroEquipment  {
+    display: flex;
+    height: auto !important;
+}
+#heroV2 .currentHeroEquipment .hero {
+    display: none;
+}
+#heroV2 .currentHeroEquipment .equipmentSlots {
+    display: flex;
+}
+#heroV2 .heroItemTooltip{
+	z-index: 999999;
+}
