@@ -34,7 +34,7 @@ class Global{
             }
         }
 
-        $("#sidebarBoxActiveVillage .content .loyalty").each(function(){
+        $("#sidebarBoxActiveVillage .content:has( .playerName)").each(function(){
             let select = document.createElement("select");
             for(let key in VillageAdvanced){
                 if (isNaN(Number(key))) {
@@ -53,7 +53,6 @@ class Global{
                 Global.Villagelist_RenderVillageRowAdv(account);
             }
             select.onchange = select_onchange;
-            $(this).get()[0].insertAdjacentElement("afterbegin",select);
             HotKeys.Push(81,function(){
                 let val_str =  VillageAdvanced[Number(select.value) + 1];
                 let val = VillageAdvanced.None;
@@ -70,7 +69,11 @@ class Global{
                 let j_popup = $("pop-up#ts-setting");
                 if(j_popup.length == 0) Global.GeneratePopUpSetting();
             };
-            $(this).get()[0].insertAdjacentElement("afterbegin",img_setting);
+
+            let div = document.createElement("div");
+            div.appendChild(img_setting);
+            div.appendChild(select);
+            $(this).get()[0].insertAdjacentElement("beforeend",div);
         });
     }
 

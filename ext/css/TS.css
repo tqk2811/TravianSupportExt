@@ -73,6 +73,7 @@ ts-village-row-adv span{
 	vertical-align: middle;	
 	width: 20px;
     height: 20px;
+	display: inline;
 }
 .loyalty .tjs-svg{
 	margin-right: 3px;
