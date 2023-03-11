@@ -1,25 +1,20 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "Travian Support",
     "description": "Travian Support",
     "version": "0.0.1",
-    "content_security_policy": "script-src 'self' https://tqk2811.github.io; object-src 'self'",
     "permissions": [
         "webRequest",
-        "webRequestBlocking",
         "activeTab",
-        "tabs",
-        "https://*.travian.com/*",
-        "*://*.consensu.org/*"
+        "tabs"
     ],
-    "browser_action" :{},
     "background": {
-        "scripts": ["/js/BackGround.js"],
-        "persistent": true
+        "service_worker": "/js/BackGround.js"
     },
-    "content_scripts" : [
+    "content_scripts": [
         {
-            "run_at" : "document_idle",
+            "all_frames": false,
+            "run_at": "document_idle",
             "matches": [
                 "https://*.travian.com/*"
             ],
@@ -28,5 +23,17 @@
             ]
         }
     ],
-    "web_accessible_resources":[ "/res/*", "/js/*", "/css/*", "/libs/*" ]
+    "web_accessible_resources": [
+        {
+            "matches": [
+                "https://*.travian.com/*"
+            ],
+            "resources": [
+                "/res/*",
+                "/js/*",
+                "/css/*",
+                "/libs/*"
+            ]
+        }
+    ]
 }
