@@ -4,7 +4,7 @@
     "description": "Travian Support",
     "version": "0.0.1",
     "permissions": [
-        "webRequest",
+        "declarativeNetRequest",
         "activeTab",
         "tabs"
     ],
