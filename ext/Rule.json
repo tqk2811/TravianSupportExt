@@ -1,0 +1,28 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "allowAllRequests"
+        },
+        "condition": {
+            "urlFilter": "*://*.consensu.org/*",
+            "resourceTypes": [
+                "main_frame"
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "priority": 1,
+        "action": {
+            "type": "allowAllRequests"
+        },
+        "condition": {
+            "urlFilter": "https://*.consentmanager.net/*",
+            "resourceTypes": [
+                "main_frame"
+            ]
+        }
+    }
+]

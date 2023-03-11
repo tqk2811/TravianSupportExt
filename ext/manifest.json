@@ -35,5 +35,19 @@
                 "/libs/*"
             ]
         }
+    ],
+    "declarative_net_request":{
+        "rule_resources":[
+            {
+                "id": "ruleset_1",
+                "enabled": true,
+                "path": "Rule.json"
+            }
+        ]
+    },
+    "host_permissions": [
+        "*://*.travian.com/*",
+        "*://*.consensu.org/*",
+        "*://*.consentmanager.net/*"
     ]
 }
